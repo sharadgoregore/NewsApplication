@@ -1,0 +1,590 @@
+define(['dart_sdk', 'packages/image/src/internal/clamp.dart', 'packages/image/src/image_exception.dart'], (function load__packages__image__src__color_dart(dart_sdk, packages__image__src__internal__clamp$46dart, packages__image__src__image_exception$46dart) {
+  'use strict';
+  const core = dart_sdk.core;
+  const math = dart_sdk.math;
+  const _interceptors = dart_sdk._interceptors;
+  const dart = dart_sdk.dart;
+  const dartx = dart_sdk.dartx;
+  const clamp = packages__image__src__internal__clamp$46dart.src__internal__clamp;
+  const image_exception = packages__image__src__image_exception$46dart.src__image_exception;
+  var color$ = Object.create(dart.library);
+  var $_get = dartx._get;
+  var $rightShift = dartx['>>'];
+  var $round = dartx.round;
+  var $toInt = dartx.toInt;
+  var $floor = dartx.floor;
+  var $clamp = dartx.clamp;
+  dart._checkModuleNullSafetyMode(false);
+  var T = {
+    ChannelL: () => (T.ChannelL = dart.constFn(dart.legacy(color$.Channel)))(),
+    JSArrayOfint: () => (T.JSArrayOfint = dart.constFn(_interceptors.JSArray$(core.int)))(),
+    numAndnumAndnumTonum: () => (T.numAndnumAndnumTonum = dart.constFn(dart.fnType(core.num, [core.num, core.num, core.num])))(),
+    JSArrayOfnum: () => (T.JSArrayOfnum = dart.constFn(_interceptors.JSArray$(core.num)))()
+  };
+  var T$Eval = Object.assign({
+    _: () => T$Eval
+  }, T);
+  var S = {
+    _: () => S
+  };
+  var S$Eval = Object.assign({
+    _: () => S$Eval
+  }, S);
+  const CT = Object.create({
+    _: () => (C, CT)
+  });
+  dart.defineLazy(CT, {
+    get C0() {
+      return C[0] = dart.const({
+        __proto__: color$.Channel.prototype,
+        [_name$]: "Channel.red",
+        index: 0
+      });
+    },
+    get C1() {
+      return C[1] = dart.const({
+        __proto__: color$.Channel.prototype,
+        [_name$]: "Channel.green",
+        index: 1
+      });
+    },
+    get C2() {
+      return C[2] = dart.const({
+        __proto__: color$.Channel.prototype,
+        [_name$]: "Channel.blue",
+        index: 2
+      });
+    },
+    get C3() {
+      return C[3] = dart.const({
+        __proto__: color$.Channel.prototype,
+        [_name$]: "Channel.alpha",
+        index: 3
+      });
+    },
+    get C4() {
+      return C[4] = dart.const({
+        __proto__: color$.Channel.prototype,
+        [_name$]: "Channel.luminance",
+        index: 4
+      });
+    },
+    get C5() {
+      return C[5] = dart.constList([C[0] || CT.C0, C[1] || CT.C1, C[2] || CT.C2, C[3] || CT.C3, C[4] || CT.C4], T.ChannelL());
+    }
+  }, false);
+  var C = Array(6).fill(void 0);
+  var I = [
+    "file:///C:/Users/shara/Flutter/.pub-cache/hosted/pub.dartlang.org/image-3.0.2/lib/src/color.dart",
+    "package:image/src/color.dart"
+  ];
+  var _name$ = dart.privateName(color$, "_name");
+  color$.Channel = class Channel extends core.Object {
+    toString() {
+      return this[_name$];
+    }
+  };
+  (color$.Channel.new = function(index, _name) {
+    if (index == null) dart.nullFailed(I[0], 6, 6, "index");
+    if (_name == null) dart.nullFailed(I[0], 6, 6, "_name");
+    this.index = index;
+    this[_name$] = _name;
+    ;
+  }).prototype = color$.Channel.prototype;
+  dart.addTypeTests(color$.Channel);
+  dart.addTypeCaches(color$.Channel);
+  dart.setLibraryUri(color$.Channel, I[1]);
+  dart.setFieldSignature(color$.Channel, () => ({
+    __proto__: dart.getFields(color$.Channel.__proto__),
+    index: dart.finalFieldType(core.int),
+    [_name$]: dart.finalFieldType(core.String)
+  }));
+  dart.defineExtensionMethods(color$.Channel, ['toString']);
+  color$.Channel.red = C[0] || CT.C0;
+  color$.Channel.green = C[1] || CT.C1;
+  color$.Channel.blue = C[2] || CT.C2;
+  color$.Channel.alpha = C[3] || CT.C3;
+  color$.Channel.luminance = C[4] || CT.C4;
+  color$.Channel.values = C[5] || CT.C5;
+  color$.Color = class Color extends core.Object {
+    static fromRgb(red, green, blue) {
+      if (red == null) dart.nullFailed(I[0], 36, 26, "red");
+      if (green == null) dart.nullFailed(I[0], 36, 35, "green");
+      if (blue == null) dart.nullFailed(I[0], 36, 46, "blue");
+      return color$.getColor(red, green, blue);
+    }
+    static fromRgba(red, green, blue, alpha) {
+      if (red == null) dart.nullFailed(I[0], 42, 27, "red");
+      if (green == null) dart.nullFailed(I[0], 42, 36, "green");
+      if (blue == null) dart.nullFailed(I[0], 42, 47, "blue");
+      if (alpha == null) dart.nullFailed(I[0], 42, 57, "alpha");
+      return color$.getColor(red, green, blue, alpha);
+    }
+    static fromHsl(hue, saturation, lightness) {
+      if (hue == null) dart.nullFailed(I[0], 46, 26, "hue");
+      if (saturation == null) dart.nullFailed(I[0], 46, 35, "saturation");
+      if (lightness == null) dart.nullFailed(I[0], 46, 51, "lightness");
+      let rgb = color$.hslToRgb(hue, saturation, lightness);
+      return color$.getColor(rgb[$_get](0), rgb[$_get](1), rgb[$_get](2));
+    }
+    static fromHsv(hue, saturation, value) {
+      if (hue == null) dart.nullFailed(I[0], 52, 26, "hue");
+      if (saturation == null) dart.nullFailed(I[0], 52, 35, "saturation");
+      if (value == null) dart.nullFailed(I[0], 52, 51, "value");
+      let rgb = color$.hsvToRgb(hue, saturation, value);
+      return color$.getColor(rgb[$_get](0), rgb[$_get](1), rgb[$_get](2));
+    }
+    static fromXyz(x, y, z) {
+      if (x == null) dart.nullFailed(I[0], 58, 26, "x");
+      if (y == null) dart.nullFailed(I[0], 58, 33, "y");
+      if (z == null) dart.nullFailed(I[0], 58, 40, "z");
+      let rgb = color$.xyzToRgb(x, y, z);
+      return color$.getColor(rgb[$_get](0), rgb[$_get](1), rgb[$_get](2));
+    }
+    static fromLab(L, a, b) {
+      if (L == null) dart.nullFailed(I[0], 64, 26, "L");
+      if (a == null) dart.nullFailed(I[0], 64, 33, "a");
+      if (b == null) dart.nullFailed(I[0], 64, 40, "b");
+      let rgb = color$.labToRgb(L, a, b);
+      return color$.getColor(rgb[$_get](0), rgb[$_get](1), rgb[$_get](2));
+    }
+    static distance(c1, c2, compareAlpha) {
+      if (c1 == null) dart.nullFailed(I[0], 70, 33, "c1");
+      if (c2 == null) dart.nullFailed(I[0], 70, 47, "c2");
+      if (compareAlpha == null) dart.nullFailed(I[0], 70, 56, "compareAlpha");
+      let d1 = dart.notNull(c1[$_get](0)) - dart.notNull(c2[$_get](0));
+      let d2 = dart.notNull(c1[$_get](1)) - dart.notNull(c2[$_get](1));
+      let d3 = dart.notNull(c1[$_get](2)) - dart.notNull(c2[$_get](2));
+      if (dart.test(compareAlpha)) {
+        let dA = dart.notNull(c1[$_get](3)) - dart.notNull(c2[$_get](3));
+        return math.sqrt(math.max(core.num, d1 * d1, (d1 - dA) * (d1 - dA)) + math.max(core.num, d2 * d2, (d2 - dA) * (d2 - dA)) + math.max(core.num, d3 * d3, (d3 - dA) * (d3 - dA)));
+      } else {
+        return math.sqrt(d1 * d1 + d2 * d2 + d3 * d3);
+      }
+    }
+  };
+  (color$.Color.new = function() {
+    ;
+  }).prototype = color$.Color.prototype;
+  dart.addTypeTests(color$.Color);
+  dart.addTypeCaches(color$.Color);
+  dart.setLibraryUri(color$.Color, I[1]);
+  color$.getColor = function getColor(r, g, b, a = 255) {
+    if (r == null) dart.nullFailed(I[0], 88, 18, "r");
+    if (g == null) dart.nullFailed(I[0], 88, 25, "g");
+    if (b == null) dart.nullFailed(I[0], 88, 32, "b");
+    if (a == null) dart.nullFailed(I[0], 88, 40, "a");
+    return (dart.notNull(clamp.clamp255(a)) << 24 | dart.notNull(clamp.clamp255(b)) << 16 >>> 0 | dart.notNull(clamp.clamp255(g)) << 8 >>> 0 | dart.notNull(clamp.clamp255(r))) >>> 0;
+  };
+  color$.getChannel = function getChannel(color, channel) {
+    if (color == null) dart.nullFailed(I[0], 95, 20, "color");
+    if (channel == null) dart.nullFailed(I[0], 95, 35, "channel");
+    return channel == color$.Channel.red ? color$.getRed(color) : channel == color$.Channel.green ? color$.getGreen(color) : channel == color$.Channel.blue ? color$.getBlue(color) : channel == color$.Channel.alpha ? color$.getAlpha(color) : color$.getLuminance(color);
+  };
+  color$.setChannel = function setChannel(color, channel, value) {
+    if (color == null) dart.nullFailed(I[0], 107, 20, "color");
+    if (channel == null) dart.nullFailed(I[0], 107, 35, "channel");
+    if (value == null) dart.nullFailed(I[0], 107, 48, "value");
+    return channel == color$.Channel.red ? color$.setRed(color, value) : channel == color$.Channel.green ? color$.setGreen(color, value) : channel == color$.Channel.blue ? color$.setBlue(color, value) : channel == color$.Channel.alpha ? color$.setAlpha(color, value) : color;
+  };
+  color$.getRed = function getRed(color) {
+    if (color == null) dart.nullFailed(I[0], 118, 16, "color");
+    return dart.notNull(color) & 255;
+  };
+  color$.setRed = function setRed(color, value) {
+    if (color == null) dart.nullFailed(I[0], 122, 16, "color");
+    if (value == null) dart.nullFailed(I[0], 122, 27, "value");
+    return (dart.notNull(color) & 4294967040 | dart.notNull(clamp.clamp255(value))) >>> 0;
+  };
+  color$.getGreen = function getGreen(color) {
+    if (color == null) dart.nullFailed(I[0], 125, 18, "color");
+    return dart.notNull(color) >> 8 & 255;
+  };
+  color$.setGreen = function setGreen(color, value) {
+    if (color == null) dart.nullFailed(I[0], 129, 18, "color");
+    if (value == null) dart.nullFailed(I[0], 129, 29, "value");
+    return (dart.notNull(color) & 4294902015 | dart.notNull(clamp.clamp255(value)) << 8 >>> 0) >>> 0;
+  };
+  color$.getBlue = function getBlue(color) {
+    if (color == null) dart.nullFailed(I[0], 133, 17, "color");
+    return dart.notNull(color) >> 16 & 255;
+  };
+  color$.setBlue = function setBlue(color, value) {
+    if (color == null) dart.nullFailed(I[0], 137, 17, "color");
+    if (value == null) dart.nullFailed(I[0], 137, 28, "value");
+    return (dart.notNull(color) & 4278255615 | dart.notNull(clamp.clamp255(value)) << 16 >>> 0) >>> 0;
+  };
+  color$.getAlpha = function getAlpha(color) {
+    if (color == null) dart.nullFailed(I[0], 141, 18, "color");
+    return color[$rightShift](24) & 255;
+  };
+  color$.setAlpha = function setAlpha(color, value) {
+    if (color == null) dart.nullFailed(I[0], 145, 18, "color");
+    if (value == null) dart.nullFailed(I[0], 145, 29, "value");
+    return (dart.notNull(color) & 16777215 | dart.notNull(clamp.clamp255(value)) << 24 >>> 0) >>> 0;
+  };
+  color$.alphaBlendColors = function alphaBlendColors(dst, src, fraction = 255) {
+    if (dst == null) dart.nullFailed(I[0], 150, 26, "dst");
+    if (src == null) dart.nullFailed(I[0], 150, 35, "src");
+    if (fraction == null) dart.nullFailed(I[0], 150, 45, "fraction");
+    let srcAlpha = color$.getAlpha(src);
+    if (srcAlpha === 255 && fraction === 255) {
+      return src;
+    }
+    let a = dart.notNull(srcAlpha) / 255.0;
+    if (fraction !== 255) {
+      a = a * (dart.notNull(fraction) / 255.0);
+    }
+    let sr = (dart.notNull(color$.getRed(src)) * a)[$round]();
+    let sg = (dart.notNull(color$.getGreen(src)) * a)[$round]();
+    let sb = (dart.notNull(color$.getBlue(src)) * a)[$round]();
+    let sa = (dart.notNull(srcAlpha) * a)[$round]();
+    let dr = (dart.notNull(color$.getRed(dst)) * (1.0 - a))[$round]();
+    let dg = (dart.notNull(color$.getGreen(dst)) * (1.0 - a))[$round]();
+    let db = (dart.notNull(color$.getBlue(dst)) * (1.0 - a))[$round]();
+    let da = (dart.notNull(color$.getAlpha(dst)) * (1.0 - a))[$round]();
+    return color$.getColor(sr + dr, sg + dg, sb + db, sa + da);
+  };
+  color$.getLuminance = function getLuminance(color) {
+    if (color == null) dart.nullFailed(I[0], 175, 22, "color");
+    let r = color$.getRed(color);
+    let g = color$.getGreen(color);
+    let b = color$.getBlue(color);
+    return (0.299 * dart.notNull(r) + 0.587 * dart.notNull(g) + 0.114 * dart.notNull(b))[$round]();
+  };
+  color$.getLuminanceRgb = function getLuminanceRgb(r, g, b) {
+    if (r == null) dart.nullFailed(I[0], 183, 25, "r");
+    if (g == null) dart.nullFailed(I[0], 183, 32, "g");
+    if (b == null) dart.nullFailed(I[0], 183, 39, "b");
+    return (0.299 * dart.notNull(r) + 0.587 * dart.notNull(g) + 0.114 * dart.notNull(b))[$round]();
+  };
+  color$.hslToRgb = function hslToRgb(hue, saturation, lightness) {
+    if (hue == null) dart.nullFailed(I[0], 189, 24, "hue");
+    if (saturation == null) dart.nullFailed(I[0], 189, 33, "saturation");
+    if (lightness == null) dart.nullFailed(I[0], 189, 49, "lightness");
+    if (saturation === 0) {
+      let gray = (dart.notNull(lightness) * 255.0)[$toInt]();
+      return T.JSArrayOfint().of([gray, gray, gray]);
+    }
+    function hue2rgb(p, q, t) {
+      if (p == null) dart.nullFailed(I[0], 195, 19, "p");
+      if (q == null) dart.nullFailed(I[0], 195, 26, "q");
+      if (t == null) dart.nullFailed(I[0], 195, 33, "t");
+      if (dart.notNull(t) < 0.0) {
+        t = dart.notNull(t) + 1.0;
+      }
+      if (dart.notNull(t) > 1) {
+        t = dart.notNull(t) - 1.0;
+      }
+      if (dart.notNull(t) < 1.0 / 6.0) {
+        return dart.notNull(p) + (dart.notNull(q) - dart.notNull(p)) * 6.0 * dart.notNull(t);
+      }
+      if (dart.notNull(t) < 1.0 / 2.0) {
+        return q;
+      }
+      if (dart.notNull(t) < 2.0 / 3.0) {
+        return dart.notNull(p) + (dart.notNull(q) - dart.notNull(p)) * (2.0 / 3.0 - dart.notNull(t)) * 6.0;
+      }
+      return p;
+    }
+    dart.fn(hue2rgb, T.numAndnumAndnumTonum());
+    let q = dart.notNull(lightness) < 0.5 ? dart.notNull(lightness) * (1.0 + dart.notNull(saturation)) : dart.notNull(lightness) + dart.notNull(saturation) - dart.notNull(lightness) * dart.notNull(saturation);
+    let p = 2.0 * dart.notNull(lightness) - q;
+    let r = hue2rgb(p, q, dart.notNull(hue) + 1.0 / 3.0);
+    let g = hue2rgb(p, q, hue);
+    let b = hue2rgb(p, q, dart.notNull(hue) - 1.0 / 3.0);
+    return T.JSArrayOfint().of([(dart.notNull(r) * 255.0)[$round](), (dart.notNull(g) * 255.0)[$round](), (dart.notNull(b) * 255.0)[$round]()]);
+  };
+  color$.hsvToRgb = function hsvToRgb(hue, saturation, brightness) {
+    if (hue == null) dart.nullFailed(I[0], 229, 24, "hue");
+    if (saturation == null) dart.nullFailed(I[0], 229, 33, "saturation");
+    if (brightness == null) dart.nullFailed(I[0], 229, 49, "brightness");
+    if (saturation === 0) {
+      let gray = (dart.notNull(brightness) * 255.0)[$round]();
+      return T.JSArrayOfint().of([gray, gray, gray]);
+    }
+    let h = (dart.notNull(hue) - hue[$floor]()) * 6.0;
+    let f = h - h[$floor]();
+    let p = dart.notNull(brightness) * (1.0 - dart.notNull(saturation));
+    let q = dart.notNull(brightness) * (1.0 - dart.notNull(saturation) * f);
+    let t = dart.notNull(brightness) * (1.0 - dart.notNull(saturation) * (1.0 - f));
+    switch (h[$toInt]()) {
+      case 0:
+      {
+        return T.JSArrayOfint().of([(dart.notNull(brightness) * 255.0)[$round](), (t * 255.0)[$round](), (p * 255.0)[$round]()]);
+      }
+      case 1:
+      {
+        return T.JSArrayOfint().of([(q * 255.0)[$round](), (dart.notNull(brightness) * 255.0)[$round](), (p * 255.0)[$round]()]);
+      }
+      case 2:
+      {
+        return T.JSArrayOfint().of([(p * 255.0)[$round](), (dart.notNull(brightness) * 255.0)[$round](), (t * 255.0)[$round]()]);
+      }
+      case 3:
+      {
+        return T.JSArrayOfint().of([(p * 255.0)[$round](), (q * 255.0)[$round](), (dart.notNull(brightness) * 255.0)[$round]()]);
+      }
+      case 4:
+      {
+        return T.JSArrayOfint().of([(t * 255.0)[$round](), (p * 255.0)[$round](), (dart.notNull(brightness) * 255.0)[$round]()]);
+      }
+      case 5:
+      {
+        return T.JSArrayOfint().of([(dart.notNull(brightness) * 255.0)[$round](), (p * 255.0)[$round](), (q * 255.0)[$round]()]);
+      }
+      default:
+      {
+        dart.throw(new image_exception.ImageException.new("invalid hue"));
+      }
+    }
+  };
+  color$.rgbToHsl = function rgbToHsl(r, g, b) {
+    if (r == null) dart.nullFailed(I[0], 285, 24, "r");
+    if (g == null) dart.nullFailed(I[0], 285, 31, "g");
+    if (b == null) dart.nullFailed(I[0], 285, 38, "b");
+    r = dart.notNull(r) / 255.0;
+    g = dart.notNull(g) / 255.0;
+    b = dart.notNull(b) / 255.0;
+    let mx = math.max(core.num, r, math.max(core.num, g, b));
+    let mn = math.min(core.num, r, math.min(core.num, g, b));
+    let h = null;
+    let l = (mx + mn) / 2.0;
+    if (mx === mn) {
+      return T.JSArrayOfnum().of([0.0, 0.0, l]);
+    }
+    let d = mx - mn;
+    let s = l > 0.5 ? d / (2.0 - mx - mn) : d / (mx + mn);
+    if (mx === r) {
+      h = (dart.notNull(g) - dart.notNull(b)) / d + (dart.notNull(g) < dart.notNull(b) ? 6.0 : 0.0);
+    } else if (mx === g) {
+      h = (dart.notNull(b) - dart.notNull(r)) / d + 2.0;
+    } else {
+      h = (dart.notNull(r) - dart.notNull(g)) / d + 4.0;
+    }
+    h = dart.notNull(h) / 6.0;
+    return T.JSArrayOfnum().of([h, s, l]);
+  };
+  color$.labToXyz = function labToXyz(l, a, b) {
+    if (l == null) dart.nullFailed(I[0], 316, 24, "l");
+    if (a == null) dart.nullFailed(I[0], 316, 31, "a");
+    if (b == null) dart.nullFailed(I[0], 316, 38, "b");
+    let y = (dart.notNull(l) + 16.0) / 116.0;
+    let x = y + dart.notNull(a) / 500.0;
+    let z = y - dart.notNull(b) / 200.0;
+    if (math.pow(x, 3) > 0.008856) {
+      x = math.pow(x, 3);
+    } else {
+      x = (x - 16.0 / 116) / 7.787;
+    }
+    if (math.pow(y, 3) > 0.008856) {
+      y = math.pow(y, 3);
+    } else {
+      y = (y - 16.0 / 116.0) / 7.787;
+    }
+    if (math.pow(z, 3) > 0.008856) {
+      z = math.pow(z, 3);
+    } else {
+      z = (z - 16.0 / 116.0) / 7.787;
+    }
+    return T.JSArrayOfint().of([(x * 95.047)[$toInt](), (y * 100.0)[$toInt](), (z * 108.883)[$toInt]()]);
+  };
+  color$.xyzToRgb = function xyzToRgb(x, y, z) {
+    if (x == null) dart.nullFailed(I[0], 340, 24, "x");
+    if (y == null) dart.nullFailed(I[0], 340, 31, "y");
+    if (z == null) dart.nullFailed(I[0], 340, 38, "z");
+    x = dart.notNull(x) / 100;
+    y = dart.notNull(y) / 100;
+    z = dart.notNull(z) / 100;
+    let r = 3.2406 * dart.notNull(x) + -1.5372 * dart.notNull(y) + -0.4986 * dart.notNull(z);
+    let g = -0.9689 * dart.notNull(x) + 1.8758 * dart.notNull(y) + 0.0415 * dart.notNull(z);
+    let b = 0.0557 * dart.notNull(x) + -0.204 * dart.notNull(y) + 1.057 * dart.notNull(z);
+    if (r > 0.0031308) {
+      r = 1.055 * math.pow(r, 0.4166666667) - 0.055;
+    } else {
+      r = r * 12.92;
+    }
+    if (g > 0.0031308) {
+      g = 1.055 * math.pow(g, 0.4166666667) - 0.055;
+    } else {
+      g = g * 12.92;
+    }
+    if (b > 0.0031308) {
+      b = 1.055 * math.pow(b, 0.4166666667) - 0.055;
+    } else {
+      b = b * 12.92;
+    }
+    return T.JSArrayOfint().of([(r * 255)[$clamp](0, 255)[$toInt](), (g * 255)[$clamp](0, 255)[$toInt](), (b * 255)[$clamp](0, 255)[$toInt]()]);
+  };
+  color$.cmykToRgb = function cmykToRgb(c, m, y, k) {
+    if (c == null) dart.nullFailed(I[0], 372, 25, "c");
+    if (m == null) dart.nullFailed(I[0], 372, 32, "m");
+    if (y == null) dart.nullFailed(I[0], 372, 39, "y");
+    if (k == null) dart.nullFailed(I[0], 372, 46, "k");
+    c = dart.notNull(c) / 255.0;
+    m = dart.notNull(m) / 255.0;
+    y = dart.notNull(y) / 255.0;
+    k = dart.notNull(k) / 255.0;
+    return T.JSArrayOfint().of([(255.0 * (1.0 - dart.notNull(c)) * (1.0 - dart.notNull(k)))[$round](), (255.0 * (1.0 - dart.notNull(m)) * (1.0 - dart.notNull(k)))[$round](), (255.0 * (1.0 - dart.notNull(y)) * (1.0 - dart.notNull(k)))[$round]()]);
+  };
+  color$.labToRgb = function labToRgb(l, a, b) {
+    if (l == null) dart.nullFailed(I[0], 385, 24, "l");
+    if (a == null) dart.nullFailed(I[0], 385, 31, "a");
+    if (b == null) dart.nullFailed(I[0], 385, 38, "b");
+    let y = (dart.notNull(l) + 16.0) / 116.0;
+    let x = dart.notNull(a) / 500.0 + y;
+    let z = y - dart.notNull(b) / 200.0;
+    let y3 = math.pow(y, 3);
+    if (y3 > 0.008856) {
+      y = y3;
+    } else {
+      y = (y - 16 / 116) / 7.787;
+    }
+    let x3 = math.pow(x, 3);
+    if (x3 > 0.008856) {
+      x = x3;
+    } else {
+      x = (x - 16 / 116) / 7.787;
+    }
+    let z3 = math.pow(z, 3);
+    if (z3 > 0.008856) {
+      z = z3;
+    } else {
+      z = (z - 16 / 116) / 7.787;
+    }
+    x = x * 95.047;
+    y = y * 100;
+    z = z * 108.883;
+    x = x / 100.0;
+    y = y / 100.0;
+    z = z / 100.0;
+    let R = x * 3.2406 + y * -1.5372 + z * -0.4986;
+    let G = x * -0.9689 + y * 1.8758 + z * 0.0415;
+    let B = x * 0.0557 + y * -0.204 + z * 1.057;
+    if (R > 0.0031308) {
+      R = 1.055 * math.pow(R, 1.0 / 2.4) - 0.055;
+    } else {
+      R = 12.92 * R;
+    }
+    if (G > 0.0031308) {
+      G = 1.055 * math.pow(G, 1.0 / 2.4) - 0.055;
+    } else {
+      G = 12.92 * G;
+    }
+    if (B > 0.0031308) {
+      B = 1.055 * math.pow(B, 1.0 / 2.4) - 0.055;
+    } else {
+      B = 12.92 * B;
+    }
+    return T.JSArrayOfint().of([(R * 255.0)[$clamp](0, 255)[$toInt](), (G * 255.0)[$clamp](0, 255)[$toInt](), (B * 255.0)[$clamp](0, 255)[$toInt]()]);
+  };
+  color$.rgbToXyz = function rgbToXyz(r, g, b) {
+    if (r == null) dart.nullFailed(I[0], 454, 24, "r");
+    if (g == null) dart.nullFailed(I[0], 454, 31, "g");
+    if (b == null) dart.nullFailed(I[0], 454, 38, "b");
+    r = dart.notNull(r) / 255.0;
+    g = dart.notNull(g) / 255.0;
+    b = dart.notNull(b) / 255.0;
+    if (dart.notNull(r) > 0.04045) {
+      r = math.pow((dart.notNull(r) + 0.055) / 1.055, 2.4);
+    } else {
+      r = dart.notNull(r) / 12.92;
+    }
+    if (dart.notNull(g) > 0.04045) {
+      g = math.pow((dart.notNull(g) + 0.055) / 1.055, 2.4);
+    } else {
+      g = dart.notNull(g) / 12.92;
+    }
+    if (dart.notNull(b) > 0.04045) {
+      b = math.pow((dart.notNull(b) + 0.055) / 1.055, 2.4);
+    } else {
+      b = dart.notNull(b) / 12.92;
+    }
+    r = dart.notNull(r) * 100.0;
+    g = dart.notNull(g) * 100.0;
+    b = dart.notNull(b) * 100.0;
+    return T.JSArrayOfnum().of([dart.notNull(r) * 0.4124 + dart.notNull(g) * 0.3576 + dart.notNull(b) * 0.1805, dart.notNull(r) * 0.2126 + dart.notNull(g) * 0.7152 + dart.notNull(b) * 0.0722, dart.notNull(r) * 0.0193 + dart.notNull(g) * 0.1192 + dart.notNull(b) * 0.9505]);
+  };
+  color$.xyzToLab = function xyzToLab(x, y, z) {
+    if (x == null) dart.nullFailed(I[0], 487, 24, "x");
+    if (y == null) dart.nullFailed(I[0], 487, 31, "y");
+    if (z == null) dart.nullFailed(I[0], 487, 38, "z");
+    x = dart.notNull(x) / 95.047;
+    y = dart.notNull(y) / 100.0;
+    z = dart.notNull(z) / 108.883;
+    if (dart.notNull(x) > 0.008856) {
+      x = math.pow(x, 1 / 3.0);
+    } else {
+      x = 7.787 * dart.notNull(x) + 16 / 116.0;
+    }
+    if (dart.notNull(y) > 0.008856) {
+      y = math.pow(y, 1 / 3.0);
+    } else {
+      y = 7.787 * dart.notNull(y) + 16 / 116.0;
+    }
+    if (dart.notNull(z) > 0.008856) {
+      z = math.pow(z, 1 / 3.0);
+    } else {
+      z = 7.787 * dart.notNull(z) + 16 / 116.0;
+    }
+    return T.JSArrayOfnum().of([116.0 * dart.notNull(y) - 16, 500.0 * (dart.notNull(x) - dart.notNull(y)), 200.0 * (dart.notNull(y) - dart.notNull(z))]);
+  };
+  color$.rgbToLab = function rgbToLab(r, g, b) {
+    if (r == null) dart.nullFailed(I[0], 512, 24, "r");
+    if (g == null) dart.nullFailed(I[0], 512, 31, "g");
+    if (b == null) dart.nullFailed(I[0], 512, 38, "b");
+    r = dart.notNull(r) / 255.0;
+    g = dart.notNull(g) / 255.0;
+    b = dart.notNull(b) / 255.0;
+    if (dart.notNull(r) > 0.04045) {
+      r = math.pow((dart.notNull(r) + 0.055) / 1.055, 2.4);
+    } else {
+      r = dart.notNull(r) / 12.92;
+    }
+    if (dart.notNull(g) > 0.04045) {
+      g = math.pow((dart.notNull(g) + 0.055) / 1.055, 2.4);
+    } else {
+      g = dart.notNull(g) / 12.92;
+    }
+    if (dart.notNull(b) > 0.04045) {
+      b = math.pow((dart.notNull(b) + 0.055) / 1.055, 2.4);
+    } else {
+      b = dart.notNull(b) / 12.92;
+    }
+    r = dart.notNull(r) * 100.0;
+    g = dart.notNull(g) * 100.0;
+    b = dart.notNull(b) * 100.0;
+    let x = dart.notNull(r) * 0.4124 + dart.notNull(g) * 0.3576 + dart.notNull(b) * 0.1805;
+    let y = dart.notNull(r) * 0.2126 + dart.notNull(g) * 0.7152 + dart.notNull(b) * 0.0722;
+    let z = dart.notNull(r) * 0.0193 + dart.notNull(g) * 0.1192 + dart.notNull(b) * 0.9505;
+    x = x / 95.047;
+    y = y / 100.0;
+    z = z / 108.883;
+    if (x > 0.008856) {
+      x = math.pow(x, 1 / 3.0);
+    } else {
+      x = 7.787 * x + 16 / 116.0;
+    }
+    if (y > 0.008856) {
+      y = math.pow(y, 1 / 3.0);
+    } else {
+      y = 7.787 * y + 16 / 116.0;
+    }
+    if (z > 0.008856) {
+      z = math.pow(z, 1 / 3.0);
+    } else {
+      z = 7.787 * z + 16 / 116.0;
+    }
+    return T.JSArrayOfnum().of([116.0 * y - 16, 500.0 * (x - y), 200.0 * (y - z)]);
+  };
+  dart.trackLibraries("packages/image/src/color.dart", {
+    "package:image/src/color.dart": color$
+  }, {
+  }, '{"version":3,"sourceRoot":"","sources":["color.dart"],"names":[],"mappings":"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","file":"../../../../../../../../../../D:/packages/image/src/color.dart.lib.js"}');
+  // Exports:
+  return {
+    src__color: color$
+  };
+}));
+
+//# sourceMappingURL=color.dart.lib.js.map

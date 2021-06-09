@@ -1,0 +1,1066 @@
+define(['dart_sdk', 'packages/image/src/util/input_buffer.dart', 'packages/image/src/formats/png/png_info.dart', 'packages/image/src/image_exception.dart', 'packages/image/src/formats/png/png_frame.dart', 'packages/image/src/color.dart', 'packages/image/src/image.dart', 'packages/archive/src/zlib_decoder.dart', 'packages/image/src/icc_profile_data.dart', 'packages/image/src/animation.dart', 'packages/image/src/transform/copy_into.dart', 'packages/archive/src/util/crc32.dart', 'packages/image/src/formats/decoder.dart', 'packages/image/src/formats/decode_info.dart'], (function load__packages__image__src__formats__png_decoder_dart(dart_sdk, packages__image__src__util__input_buffer$46dart, packages__image__src__formats__png__png_info$46dart, packages__image__src__image_exception$46dart, packages__image__src__formats__png__png_frame$46dart, packages__image__src__color$46dart, packages__image__src__image$46dart, packages__archive__src__zlib_decoder$46dart, packages__image__src__icc_profile_data$46dart, packages__image__src__animation$46dart, packages__image__src__transform__copy_into$46dart, packages__archive__src__util__crc32$46dart, packages__image__src__formats__decoder$46dart, packages__image__src__formats__decode_info$46dart) {
+  'use strict';
+  const core = dart_sdk.core;
+  const _interceptors = dart_sdk._interceptors;
+  const _internal = dart_sdk._internal;
+  const dart = dart_sdk.dart;
+  const dartx = dart_sdk.dartx;
+  const input_buffer = packages__image__src__util__input_buffer$46dart.src__util__input_buffer;
+  const png_info = packages__image__src__formats__png__png_info$46dart.src__formats__png__png_info;
+  const image_exception = packages__image__src__image_exception$46dart.src__image_exception;
+  const png_frame = packages__image__src__formats__png__png_frame$46dart.src__formats__png__png_frame;
+  const color = packages__image__src__color$46dart.src__color;
+  const image$ = packages__image__src__image$46dart.src__image;
+  const zlib_decoder = packages__archive__src__zlib_decoder$46dart.src__zlib_decoder;
+  const icc_profile_data = packages__image__src__icc_profile_data$46dart.src__icc_profile_data;
+  const animation = packages__image__src__animation$46dart.src__animation;
+  const copy_into = packages__image__src__transform__copy_into$46dart.src__transform__copy_into;
+  const crc32 = packages__archive__src__util__crc32$46dart.src__util__crc32;
+  const decoder = packages__image__src__formats__decoder$46dart.src__formats__decoder;
+  const decode_info = packages__image__src__formats__decode_info$46dart.src__formats__decode_info;
+  var png_decoder = Object.create(dart.library);
+  var $_get = dartx._get;
+  var $contains = dartx.contains;
+  var $add = dartx.add;
+  var $last = dartx.last;
+  var $length = dartx.length;
+  var $addAll = dartx.addAll;
+  var $_set = dartx._set;
+  var $rightShift = dartx['>>'];
+  var $abs = dartx.abs;
+  var $codeUnits = dartx.codeUnits;
+  var $leftShift = dartx['<<'];
+  dart._checkModuleNullSafetyMode(false);
+  var T = {
+    intL: () => (T.intL = dart.constFn(dart.legacy(core.int)))(),
+    JSArrayOfint: () => (T.JSArrayOfint = dart.constFn(_interceptors.JSArray$(core.int)))(),
+    ListOfint: () => (T.ListOfint = dart.constFn(core.List$(core.int)))(),
+    intToint: () => (T.intToint = dart.constFn(dart.fnType(core.int, [core.int])))(),
+    JSArrayOfListOfint: () => (T.JSArrayOfListOfint = dart.constFn(_interceptors.JSArray$(T.ListOfint())))(),
+    VoidToint: () => (T.VoidToint = dart.constFn(dart.fnType(core.int, [])))(),
+    intTodynamic: () => (T.intTodynamic = dart.constFn(dart.fnType(dart.dynamic, [core.int])))()
+  };
+  var T$Eval = Object.assign({
+    _: () => T$Eval
+  }, T);
+  var S = {
+    _: () => S
+  };
+  var S$Eval = Object.assign({
+    _: () => S$Eval
+  }, S);
+  const CT = Object.create({
+    _: () => (C, CT)
+  });
+  dart.defineLazy(CT, {
+    get C0() {
+      return C[0] = dart.constList([137, 80, 78, 71, 13, 10, 26, 10], T.intL());
+    }
+  }, false);
+  var C = [void 0];
+  var I = [
+    "file:///C:/Users/shara/Flutter/.pub-cache/hosted/pub.dartlang.org/image-3.0.2/lib/src/formats/png_decoder.dart",
+    "package:image/src/formats/png_decoder.dart"
+  ];
+  var _info = dart.privateName(png_decoder, "_info");
+  var _bitBuffer = dart.privateName(png_decoder, "_bitBuffer");
+  var _bitBufferLen = dart.privateName(png_decoder, "_bitBufferLen");
+  var __PngDecoder__input = dart.privateName(png_decoder, "_#PngDecoder#_input");
+  var __PngDecoder__input_isSet = dart.privateName(png_decoder, "_#PngDecoder#_input#isSet");
+  var _progressY = dart.privateName(png_decoder, "_progressY");
+  var _input = dart.privateName(png_decoder, "_input");
+  var _crc = dart.privateName(png_decoder, "_crc");
+  var _resetBits = dart.privateName(png_decoder, "_resetBits");
+  var _processPass = dart.privateName(png_decoder, "_processPass");
+  var _process = dart.privateName(png_decoder, "_process");
+  var _unfilter = dart.privateName(png_decoder, "_unfilter");
+  var _readPixel = dart.privateName(png_decoder, "_readPixel");
+  var _getColor = dart.privateName(png_decoder, "_getColor");
+  var _convert16to8 = dart.privateName(png_decoder, "_convert16to8");
+  var _convert1to8 = dart.privateName(png_decoder, "_convert1to8");
+  var _convert2to8 = dart.privateName(png_decoder, "_convert2to8");
+  var _convert4to8 = dart.privateName(png_decoder, "_convert4to8");
+  var _readBits = dart.privateName(png_decoder, "_readBits");
+  png_decoder.PngDecoder = class PngDecoder extends decoder.Decoder {
+    isValidFile(data) {
+      if (data == null) dart.nullFailed(I[0], 21, 30, "data");
+      let input = new input_buffer.InputBuffer.new(data, {bigEndian: true});
+      let pngHeader = input.readBytes(8);
+      let PNG_HEADER = C[0] || CT.C0;
+      for (let i = 0; i < 8; i = i + 1) {
+        if (pngHeader._get(i) != PNG_HEADER[$_get](i)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    get info() {
+      return this[_info];
+    }
+    startDecode(data) {
+      if (data == null) dart.nullFailed(I[0], 39, 37, "data");
+      this[_input] = new input_buffer.InputBuffer.new(data, {bigEndian: true});
+      let pngHeader = this[_input].readBytes(8);
+      let PNG_HEADER = C[0] || CT.C0;
+      for (let i = 0; i < 8; i = i + 1) {
+        if (pngHeader._get(i) != PNG_HEADER[$_get](i)) {
+          return null;
+        }
+      }
+      while (true) {
+        let inputPos = this[_input].position;
+        let chunkSize = this[_input].readUint32();
+        let chunkType = this[_input].readString(4);
+        switch (chunkType) {
+          case "IHDR":
+          {
+            let hdr = new input_buffer.InputBuffer.from(this[_input].readBytes(chunkSize));
+            let hdrBytes = hdr.toUint8List();
+            this[_info] = new png_info.InternalPngInfo.new();
+            dart.nullCheck(this[_info]).width = hdr.readUint32();
+            dart.nullCheck(this[_info]).height = hdr.readUint32();
+            dart.nullCheck(this[_info]).bits = hdr.readByte();
+            dart.nullCheck(this[_info]).colorType = hdr.readByte();
+            dart.nullCheck(this[_info]).compressionMethod = hdr.readByte();
+            dart.nullCheck(this[_info]).filterMethod = hdr.readByte();
+            dart.nullCheck(this[_info]).interlaceMethod = hdr.readByte();
+            if (!dart.test(T.JSArrayOfint().of([0, 2, 3, 4, 6])[$contains](dart.nullCheck(this[_info]).colorType))) {
+              return null;
+            }
+            if (dart.nullCheck(this[_info]).filterMethod !== 0) {
+              return null;
+            }
+            switch (dart.nullCheck(this[_info]).colorType) {
+              case 0:
+              {
+                if (!dart.test(T.JSArrayOfint().of([1, 2, 4, 8, 16])[$contains](dart.nullCheck(this[_info]).bits))) {
+                  return null;
+                }
+                break;
+              }
+              case 2:
+              {
+                if (!dart.test(T.JSArrayOfint().of([8, 16])[$contains](dart.nullCheck(this[_info]).bits))) {
+                  return null;
+                }
+                break;
+              }
+              case 3:
+              {
+                if (!dart.test(T.JSArrayOfint().of([1, 2, 4, 8])[$contains](dart.nullCheck(this[_info]).bits))) {
+                  return null;
+                }
+                break;
+              }
+              case 4:
+              {
+                if (!dart.test(T.JSArrayOfint().of([8, 16])[$contains](dart.nullCheck(this[_info]).bits))) {
+                  return null;
+                }
+                break;
+              }
+              case 6:
+              {
+                if (!dart.test(T.JSArrayOfint().of([8, 16])[$contains](dart.nullCheck(this[_info]).bits))) {
+                  return null;
+                }
+                break;
+              }
+            }
+            let crc = this[_input].readUint32();
+            let computedCrc = this[_crc](chunkType, hdrBytes);
+            if (crc != computedCrc) {
+              dart.throw(new image_exception.ImageException.new("Invalid " + dart.str(chunkType) + " checksum"));
+            }
+            break;
+          }
+          case "PLTE":
+          {
+            dart.nullCheck(this[_info]).palette = this[_input].readBytes(chunkSize).toUint8List();
+            let crc = this[_input].readUint32();
+            let computedCrc = this[_crc](chunkType, T.ListOfint().as(dart.nullCheck(this[_info]).palette));
+            if (crc != computedCrc) {
+              dart.throw(new image_exception.ImageException.new("Invalid " + dart.str(chunkType) + " checksum"));
+            }
+            break;
+          }
+          case "tRNS":
+          {
+            dart.nullCheck(this[_info]).transparency = this[_input].readBytes(chunkSize).toUint8List();
+            let crc = this[_input].readUint32();
+            let computedCrc = this[_crc](chunkType, dart.nullCheck(dart.nullCheck(this[_info]).transparency));
+            if (crc != computedCrc) {
+              dart.throw(new image_exception.ImageException.new("Invalid " + dart.str(chunkType) + " checksum"));
+            }
+            break;
+          }
+          case "IEND":
+          {
+            this[_input].skip(4);
+            break;
+          }
+          case "gAMA":
+          {
+            if (chunkSize !== 4) {
+              dart.throw(new image_exception.ImageException.new("Invalid gAMA chunk"));
+            }
+            let gammaInt = this[_input].readUint32();
+            this[_input].skip(4);
+            if (gammaInt !== 100000) {
+              dart.nullCheck(this[_info]).gamma = dart.notNull(gammaInt) / 100000.0;
+            }
+            break;
+          }
+          case "IDAT":
+          {
+            dart.nullCheck(this[_info]).idat[$add](inputPos);
+            this[_input].skip(chunkSize);
+            this[_input].skip(4);
+            break;
+          }
+          case "acTL":
+          {
+            dart.nullCheck(this[_info]).numFrames = this[_input].readUint32();
+            dart.nullCheck(this[_info]).repeat = this[_input].readUint32();
+            this[_input].skip(4);
+            break;
+          }
+          case "fcTL":
+          {
+            let frame = new png_frame.InternalPngFrame.new();
+            dart.nullCheck(this[_info]).frames[$add](frame);
+            frame.sequenceNumber = this[_input].readUint32();
+            frame.width = this[_input].readUint32();
+            frame.height = this[_input].readUint32();
+            frame.xOffset = this[_input].readUint32();
+            frame.yOffset = this[_input].readUint32();
+            frame.delayNum = this[_input].readUint16();
+            frame.delayDen = this[_input].readUint16();
+            frame.dispose = this[_input].readByte();
+            frame.blend = this[_input].readByte();
+            this[_input].skip(4);
+            break;
+          }
+          case "fdAT":
+          {
+            this[_input].readUint32();
+            let frame = png_frame.InternalPngFrame.as(dart.nullCheck(this[_info]).frames[$last]);
+            frame.fdat[$add](inputPos);
+            this[_input].skip(dart.notNull(chunkSize) - 4);
+            this[_input].skip(4);
+            break;
+          }
+          case "bKGD":
+          {
+            if (dart.nullCheck(this[_info]).colorType === 3) {
+              let paletteIndex = this[_input].readByte();
+              chunkSize = dart.notNull(chunkSize) - 1;
+              let p3 = dart.notNull(paletteIndex) * 3;
+              let r = dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).palette)[$_get](p3));
+              let g = dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).palette)[$_get](p3 + 1));
+              let b = dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).palette)[$_get](p3 + 2));
+              dart.nullCheck(this[_info]).backgroundColor = color.Color.fromRgb(r, g, b);
+            } else if (dart.nullCheck(this[_info]).colorType === 0 || dart.nullCheck(this[_info]).colorType === 4) {
+              this[_input].readUint16();
+              chunkSize = dart.notNull(chunkSize) - 2;
+            } else if (dart.nullCheck(this[_info]).colorType === 2 || dart.nullCheck(this[_info]).colorType === 6) {
+              this[_input].readUint16();
+              this[_input].readUint16();
+              this[_input].readUint16();
+              chunkSize = dart.notNull(chunkSize) - 24;
+            }
+            if (dart.notNull(chunkSize) > 0) {
+              this[_input].skip(chunkSize);
+            }
+            this[_input].skip(4);
+            break;
+          }
+          case "iCCP":
+          {
+            dart.nullCheck(this[_info]).iCCPName = this[_input].readString();
+            dart.nullCheck(this[_info]).iCCPCompression = this[_input].readByte();
+            chunkSize = dart.notNull(chunkSize) - (dart.nullCheck(this[_info]).iCCPName.length + 2);
+            let profile = this[_input].readBytes(chunkSize);
+            dart.nullCheck(this[_info]).iCCPData = profile.toUint8List();
+            this[_input].skip(4);
+            break;
+          }
+          default:
+          {
+            this[_input].skip(chunkSize);
+            this[_input].skip(4);
+            break;
+          }
+        }
+        if (chunkType === "IEND") {
+          break;
+        }
+        if (dart.test(this[_input].isEOS)) {
+          return null;
+        }
+      }
+      return this[_info];
+    }
+    numFrames() {
+      return this[_info] != null ? dart.nullCheck(this[_info]).numFrames : 0;
+    }
+    decodeFrame(frame) {
+      if (frame == null) dart.nullFailed(I[0], 233, 26, "frame");
+      if (this[_info] == null) {
+        return null;
+      }
+      let imageData = T.JSArrayOfint().of([]);
+      let width = dart.nullCheck(this[_info]).width;
+      let height = dart.nullCheck(this[_info]).height;
+      if (!dart.test(dart.nullCheck(this[_info]).isAnimated) || frame === 0) {
+        for (let i = 0, len = dart.nullCheck(this[_info]).idat[$length]; i < dart.notNull(len); i = i + 1) {
+          this[_input].offset = dart.nullCheck(this[_info]).idat[$_get](i);
+          let chunkSize = this[_input].readUint32();
+          let chunkType = this[_input].readString(4);
+          let data = this[_input].readBytes(chunkSize).toUint8List();
+          imageData[$addAll](data);
+          let crc = this[_input].readUint32();
+          let computedCrc = this[_crc](chunkType, data);
+          if (crc != computedCrc) {
+            dart.throw(new image_exception.ImageException.new("Invalid " + dart.str(chunkType) + " checksum"));
+          }
+        }
+      } else {
+        if (dart.notNull(frame) < 0 || dart.notNull(frame) >= dart.notNull(dart.nullCheck(this[_info]).frames[$length])) {
+          dart.throw(new image_exception.ImageException.new("Invalid Frame Number: " + dart.str(frame)));
+        }
+        let f = png_frame.InternalPngFrame.as(dart.nullCheck(this[_info]).frames[$_get](frame));
+        width = f.width;
+        height = f.height;
+        for (let i = 0; i < dart.notNull(f.fdat[$length]); i = i + 1) {
+          this[_input].offset = f.fdat[$_get](i);
+          let chunkSize = this[_input].readUint32();
+          this[_input].readString(4);
+          this[_input].skip(4);
+          let data = this[_input].readBytes(chunkSize).toUint8List();
+          imageData[$addAll](data);
+        }
+      }
+      let channels = null;
+      if (dart.nullCheck(this[_info]).colorType === 4 || dart.nullCheck(this[_info]).colorType === 6 || dart.nullCheck(this[_info]).transparency != null) {
+        channels = image$.Channels.rgba;
+      } else {
+        channels = image$.Channels.rgb;
+      }
+      let image = new image$.Image.new(dart.nullCheck(width), dart.nullCheck(height), {channels: channels});
+      let uncompressed = new zlib_decoder.ZLibDecoder.new().decodeBytes(imageData);
+      let input = new input_buffer.InputBuffer.new(uncompressed, {bigEndian: true});
+      this[_resetBits]();
+      if (dart.nullCheck(this[_info]).colorLut == null) {
+        dart.nullCheck(this[_info]).colorLut = T.ListOfint().generate(256, dart.fn(i => {
+          if (i == null) dart.nullFailed(I[0], 297, 50, "i");
+          let c = i;
+          return c;
+        }, T.intToint()), {growable: false});
+        if (dart.nullCheck(this[_info]).palette != null && dart.nullCheck(this[_info]).gamma != null) {
+          for (let i = 0; i < dart.notNull(dart.nullCheck(dart.nullCheck(this[_info]).palette)[$length]); i = i + 1) {
+            dart.nullCheck(dart.nullCheck(this[_info]).palette)[$_set](i, dart.nullCheck(dart.nullCheck(this[_info]).colorLut)[$_get](dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).palette)[$_get](i))));
+          }
+        }
+      }
+      let origW = dart.nullCheck(this[_info]).width;
+      let origH = dart.nullCheck(this[_info]).height;
+      dart.nullCheck(this[_info]).width = width;
+      dart.nullCheck(this[_info]).height = height;
+      let w = width;
+      let h = height;
+      this[_progressY] = 0;
+      if (dart.nullCheck(this[_info]).interlaceMethod !== 0) {
+        this[_processPass](input, image, 0, 0, 8, 8, (dart.notNull(w) + 7)[$rightShift](3), (dart.notNull(h) + 7)[$rightShift](3));
+        this[_processPass](input, image, 4, 0, 8, 8, (dart.notNull(w) + 3)[$rightShift](3), (dart.notNull(h) + 7)[$rightShift](3));
+        this[_processPass](input, image, 0, 4, 4, 8, (dart.notNull(w) + 3)[$rightShift](2), (dart.notNull(h) + 3)[$rightShift](3));
+        this[_processPass](input, image, 2, 0, 4, 4, (dart.notNull(w) + 1)[$rightShift](2), (dart.notNull(h) + 3)[$rightShift](2));
+        this[_processPass](input, image, 0, 2, 2, 4, (dart.notNull(w) + 1)[$rightShift](1), (dart.notNull(h) + 1)[$rightShift](2));
+        this[_processPass](input, image, 1, 0, 2, 2, w[$rightShift](1), (dart.notNull(h) + 1)[$rightShift](1));
+        this[_processPass](input, image, 0, 1, 1, 2, w, h[$rightShift](1));
+      } else {
+        this[_process](input, image);
+      }
+      dart.nullCheck(this[_info]).width = origW;
+      dart.nullCheck(this[_info]).height = origH;
+      if (dart.nullCheck(this[_info]).iCCPData != null) {
+        image.iccProfile = new icc_profile_data.ICCProfileData.new(dart.nullCheck(this[_info]).iCCPName, icc_profile_data.ICCPCompression.deflate, dart.nullCheck(dart.nullCheck(this[_info]).iCCPData));
+      }
+      return image;
+    }
+    decodeImage(bytes, opts) {
+      if (bytes == null) dart.nullFailed(I[0], 345, 32, "bytes");
+      let frame = opts && 'frame' in opts ? opts.frame : 0;
+      if (frame == null) dart.nullFailed(I[0], 345, 44, "frame");
+      if (this.startDecode(bytes) == null) {
+        return null;
+      }
+      return this.decodeFrame(frame);
+    }
+    decodeAnimation(bytes) {
+      if (bytes == null) dart.nullFailed(I[0], 353, 40, "bytes");
+      if (this.startDecode(bytes) == null) {
+        return null;
+      }
+      let anim = new animation.Animation.new();
+      anim.width = dart.nullCheck(this[_info]).width;
+      anim.height = dart.nullCheck(this[_info]).height;
+      if (!dart.test(dart.nullCheck(this[_info]).isAnimated)) {
+        let image = dart.nullCheck(this.decodeFrame(0));
+        anim.addFrame(image);
+        return anim;
+      }
+      let dispose = 1;
+      let lastImage = new image$.Image.new(dart.nullCheck(this[_info]).width, dart.nullCheck(this[_info]).height);
+      for (let i = 0; i < dart.notNull(dart.nullCheck(this[_info]).numFrames); i = i + 1) {
+        lastImage = new image$.Image.from(lastImage);
+        let frame = dart.nullCheck(this[_info]).frames[$_get](i);
+        let image = this.decodeFrame(i);
+        if (image == null) {
+          continue;
+        }
+        if (dispose === 1 || dispose === 2) {
+          lastImage.fill(dart.nullCheck(this[_info]).backgroundColor);
+        }
+        copy_into.copyInto(lastImage, image, {dstX: frame.xOffset, dstY: frame.yOffset, blend: frame.blend === 1});
+        anim.addFrame(lastImage);
+        dispose = frame.dispose;
+      }
+      return anim;
+    }
+    [_processPass](input, image, xOffset, yOffset, xStep, yStep, passWidth, passHeight) {
+      if (input == null) dart.nullFailed(I[0], 397, 33, "input");
+      if (image == null) dart.nullFailed(I[0], 397, 46, "image");
+      if (xOffset == null) dart.nullFailed(I[0], 397, 57, "xOffset");
+      if (yOffset == null) dart.nullFailed(I[0], 397, 70, "yOffset");
+      if (xStep == null) dart.nullFailed(I[0], 398, 11, "xStep");
+      if (yStep == null) dart.nullFailed(I[0], 398, 22, "yStep");
+      if (passWidth == null) dart.nullFailed(I[0], 398, 33, "passWidth");
+      if (passHeight == null) dart.nullFailed(I[0], 398, 48, "passHeight");
+      let channels = dart.nullCheck(this[_info]).colorType === 4 ? 2 : dart.nullCheck(this[_info]).colorType === 2 ? 3 : dart.nullCheck(this[_info]).colorType === 6 ? 4 : 1;
+      let pixelDepth = channels * dart.nullCheck(dart.nullCheck(this[_info]).bits);
+      let bpp = (pixelDepth + 7)[$rightShift](3);
+      let rowBytes = (pixelDepth * dart.notNull(passWidth) + 7)[$rightShift](3);
+      let line = T.ListOfint().filled(rowBytes, 0);
+      let inData = T.JSArrayOfListOfint().of([line, line]);
+      let pixel = T.JSArrayOfint().of([0, 0, 0, 0]);
+      for (let srcY = 0, dstY = yOffset, ri = 0; srcY < dart.notNull(passHeight); srcY = srcY + 1, dstY = dart.notNull(dstY) + dart.notNull(yStep), ri = 1 - ri, this[_progressY] = dart.notNull(this[_progressY]) + 1) {
+        let filterType = input.readByte();
+        inData[$_set](ri, input.readBytes(rowBytes).toUint8List());
+        let row = inData[$_get](ri);
+        let prevRow = inData[$_get](1 - ri);
+        this[_unfilter](filterType, bpp, row, prevRow);
+        this[_resetBits]();
+        let rowInput = new input_buffer.InputBuffer.new(row, {bigEndian: true});
+        let blockHeight = xStep;
+        let blockWidth = dart.notNull(xStep) - dart.notNull(xOffset);
+        for (let srcX = 0, dstX = xOffset; srcX < dart.notNull(passWidth); srcX = srcX + 1, dstX = dart.notNull(dstX) + dart.notNull(xStep)) {
+          this[_readPixel](rowInput, pixel);
+          let c = this[_getColor](pixel);
+          image.setPixel(dstX, dstY, c);
+          if (blockWidth > 1 || dart.notNull(blockHeight) > 1) {
+            for (let i = 0; i < dart.notNull(blockHeight); i = i + 1) {
+              for (let j = 0; j < blockWidth; j = j + 1) {
+                image.setPixelSafe(dart.notNull(dstX) + j, dart.notNull(dstY) + j, c);
+              }
+            }
+          }
+        }
+      }
+    }
+    [_process](input, image) {
+      let t0;
+      if (input == null) dart.nullFailed(I[0], 461, 29, "input");
+      if (image == null) dart.nullFailed(I[0], 461, 42, "image");
+      let channels = dart.nullCheck(this[_info]).colorType === 4 ? 2 : dart.nullCheck(this[_info]).colorType === 2 ? 3 : dart.nullCheck(this[_info]).colorType === 6 ? 4 : 1;
+      let pixelDepth = channels * dart.nullCheck(dart.nullCheck(this[_info]).bits);
+      let w = dart.nullCheck(this[_info]).width;
+      let h = dart.nullCheck(this[_info]).height;
+      let rowBytes = (dart.notNull(w) * pixelDepth + 7)[$rightShift](3);
+      let bpp = (pixelDepth + 7)[$rightShift](3);
+      let line = T.ListOfint().filled(rowBytes, 0);
+      let inData = T.JSArrayOfListOfint().of([line, line]);
+      let pixel = T.JSArrayOfint().of([0, 0, 0, 0]);
+      for (let y = 0, pi = 0, ri = 0; y < dart.notNull(h); y = y + 1, ri = 1 - ri) {
+        let filterType = input.readByte();
+        inData[$_set](ri, input.readBytes(rowBytes).toUint8List());
+        let row = inData[$_get](ri);
+        let prevRow = inData[$_get](1 - ri);
+        this[_unfilter](filterType, bpp, row, prevRow);
+        this[_resetBits]();
+        let rowInput = new input_buffer.InputBuffer.new(inData[$_get](ri), {bigEndian: true});
+        for (let x = 0; x < dart.notNull(w); x = x + 1) {
+          this[_readPixel](rowInput, pixel);
+          image._set((t0 = pi, pi = t0 + 1, t0), this[_getColor](pixel));
+        }
+      }
+    }
+    [_unfilter](filterType, bpp, row, prevRow) {
+      if (filterType == null) dart.nullFailed(I[0], 507, 22, "filterType");
+      if (bpp == null) dart.nullFailed(I[0], 507, 38, "bpp");
+      if (row == null) dart.nullFailed(I[0], 507, 53, "row");
+      if (prevRow == null) dart.nullFailed(I[0], 507, 68, "prevRow");
+      let rowBytes = row[$length];
+      switch (filterType) {
+        case 0:
+        {
+          break;
+        }
+        case 1:
+        {
+          for (let x = bpp; dart.notNull(x) < dart.notNull(rowBytes); x = dart.notNull(x) + 1) {
+            row[$_set](x, dart.notNull(row[$_get](x)) + dart.notNull(row[$_get](dart.notNull(x) - dart.notNull(bpp))) & 255);
+          }
+          break;
+        }
+        case 2:
+        {
+          for (let x = 0; x < dart.notNull(rowBytes); x = x + 1) {
+            row[$_set](x, dart.notNull(row[$_get](x)) + dart.notNull(prevRow[$_get](x)) & 255);
+          }
+          break;
+        }
+        case 3:
+        {
+          for (let x = 0; x < dart.notNull(rowBytes); x = x + 1) {
+            let a = x < dart.notNull(bpp) ? 0 : row[$_get](x - dart.notNull(bpp));
+            let b = prevRow[$_get](x);
+            row[$_set](x, dart.notNull(row[$_get](x)) + (dart.notNull(a) + dart.notNull(b))[$rightShift](1) & 255);
+          }
+          break;
+        }
+        case 4:
+        {
+          for (let x = 0; x < dart.notNull(rowBytes); x = x + 1) {
+            let a = x < dart.notNull(bpp) ? 0 : row[$_get](x - dart.notNull(bpp));
+            let b = prevRow[$_get](x);
+            let c = x < dart.notNull(bpp) ? 0 : prevRow[$_get](x - dart.notNull(bpp));
+            let p = dart.notNull(a) + dart.notNull(b) - dart.notNull(c);
+            let pa = (p - dart.notNull(a))[$abs]();
+            let pb = (p - dart.notNull(b))[$abs]();
+            let pc = (p - dart.notNull(c))[$abs]();
+            let paeth = 0;
+            if (pa <= pb && pa <= pc) {
+              paeth = a;
+            } else if (pb <= pc) {
+              paeth = b;
+            } else {
+              paeth = c;
+            }
+            row[$_set](x, dart.notNull(row[$_get](x)) + dart.notNull(paeth) & 255);
+          }
+          break;
+        }
+        default:
+        {
+          dart.throw(new image_exception.ImageException.new("Invalid filter value: " + dart.str(filterType)));
+        }
+      }
+    }
+    [_convert16to8](c) {
+      if (c == null) dart.nullFailed(I[0], 559, 25, "c");
+      return c[$rightShift](8);
+    }
+    [_convert1to8](c) {
+      if (c == null) dart.nullFailed(I[0], 561, 24, "c");
+      return c === 0 ? 0 : 255;
+    }
+    [_convert2to8](c) {
+      if (c == null) dart.nullFailed(I[0], 563, 24, "c");
+      return dart.notNull(c) * 85;
+    }
+    [_convert4to8](c) {
+      if (c == null) dart.nullFailed(I[0], 565, 24, "c");
+      return dart.notNull(c) << 4 >>> 0;
+    }
+    [_crc](type, bytes) {
+      if (type == null) dart.nullFailed(I[0], 568, 19, "type");
+      if (bytes == null) dart.nullFailed(I[0], 568, 35, "bytes");
+      let crc = crc32.getCrc32(type[$codeUnits]);
+      return crc32.getCrc32(bytes, crc);
+    }
+    [_resetBits]() {
+      this[_bitBuffer] = 0;
+      this[_bitBufferLen] = 0;
+    }
+    [_readBits](input, numBits) {
+      if (input == null) dart.nullFailed(I[0], 582, 29, "input");
+      if (numBits == null) dart.nullFailed(I[0], 582, 40, "numBits");
+      if (numBits === 0) {
+        return 0;
+      }
+      if (numBits === 8) {
+        return input.readByte();
+      }
+      if (numBits === 16) {
+        return input.readUint16();
+      }
+      while (dart.notNull(this[_bitBufferLen]) < dart.notNull(numBits)) {
+        if (dart.test(input.isEOS)) {
+          dart.throw(new image_exception.ImageException.new("Invalid PNG data."));
+        }
+        let octet = input.readByte();
+        this[_bitBuffer] = octet[$leftShift](this[_bitBufferLen]);
+        this[_bitBufferLen] = dart.notNull(this[_bitBufferLen]) + 8;
+      }
+      let mask = numBits === 1 ? 1 : numBits === 2 ? 3 : numBits === 4 ? 15 : numBits === 8 ? 255 : numBits === 16 ? 65535 : 0;
+      let octet = (this[_bitBuffer][$rightShift](dart.notNull(this[_bitBufferLen]) - dart.notNull(numBits)) & mask) >>> 0;
+      this[_bitBufferLen] = dart.notNull(this[_bitBufferLen]) - dart.notNull(numBits);
+      return octet;
+    }
+    [_readPixel](input, pixel) {
+      if (input == null) dart.nullFailed(I[0], 630, 31, "input");
+      if (pixel == null) dart.nullFailed(I[0], 630, 48, "pixel");
+      switch (dart.nullCheck(this[_info]).colorType) {
+        case 0:
+        {
+          pixel[$_set](0, this[_readBits](input, dart.nullCheck(dart.nullCheck(this[_info]).bits)));
+          return;
+        }
+        case 2:
+        {
+          pixel[$_set](0, this[_readBits](input, dart.nullCheck(dart.nullCheck(this[_info]).bits)));
+          pixel[$_set](1, this[_readBits](input, dart.nullCheck(dart.nullCheck(this[_info]).bits)));
+          pixel[$_set](2, this[_readBits](input, dart.nullCheck(dart.nullCheck(this[_info]).bits)));
+          return;
+        }
+        case 3:
+        {
+          pixel[$_set](0, this[_readBits](input, dart.nullCheck(dart.nullCheck(this[_info]).bits)));
+          return;
+        }
+        case 4:
+        {
+          pixel[$_set](0, this[_readBits](input, dart.nullCheck(dart.nullCheck(this[_info]).bits)));
+          pixel[$_set](1, this[_readBits](input, dart.nullCheck(dart.nullCheck(this[_info]).bits)));
+          return;
+        }
+        case 6:
+        {
+          pixel[$_set](0, this[_readBits](input, dart.nullCheck(dart.nullCheck(this[_info]).bits)));
+          pixel[$_set](1, this[_readBits](input, dart.nullCheck(dart.nullCheck(this[_info]).bits)));
+          pixel[$_set](2, this[_readBits](input, dart.nullCheck(dart.nullCheck(this[_info]).bits)));
+          pixel[$_set](3, this[_readBits](input, dart.nullCheck(dart.nullCheck(this[_info]).bits)));
+          return;
+        }
+      }
+      dart.throw(new image_exception.ImageException.new("Invalid color type: " + dart.str(dart.nullCheck(this[_info]).colorType) + "."));
+    }
+    [_getColor](raw) {
+      if (raw == null) dart.nullFailed(I[0], 659, 27, "raw");
+      switch (dart.nullCheck(this[_info]).colorType) {
+        case 0:
+        {
+          let g$ = null;
+          let g$35isSet = false;
+          function g$35get() {
+            return g$35isSet ? g$ : dart.throw(new _internal.LateError.localNI("g"));
+          }
+          dart.fn(g$35get, T.VoidToint());
+          function g$35set(t3) {
+            if (t3 == null) dart.nullFailed(I[0], 662, 18, "null");
+            g$35isSet = true;
+            return g$ = t3;
+          }
+          dart.fn(g$35set, T.intTodynamic());
+          switch (dart.nullCheck(this[_info]).bits) {
+            case 1:
+            {
+              g$35set(this[_convert1to8](raw[$_get](0)));
+              break;
+            }
+            case 2:
+            {
+              g$35set(this[_convert2to8](raw[$_get](0)));
+              break;
+            }
+            case 4:
+            {
+              g$35set(this[_convert4to8](raw[$_get](0)));
+              break;
+            }
+            case 8:
+            {
+              g$35set(raw[$_get](0));
+              break;
+            }
+            case 16:
+            {
+              g$35set(this[_convert16to8](raw[$_get](0)));
+              break;
+            }
+          }
+          g$35set(dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).colorLut)[$_get](g$35get())));
+          if (dart.nullCheck(this[_info]).transparency != null) {
+            let a = ((dart.notNull(dart.nullCheck(dart.nullCheck(this[_info]).transparency)[$_get](0)) & 255) << 24 | dart.notNull(dart.nullCheck(dart.nullCheck(this[_info]).transparency)[$_get](1)) & 255) >>> 0;
+            if (raw[$_get](0) === a) {
+              return color.getColor(g$35get(), g$35get(), g$35get(), 0);
+            }
+          }
+          return color.getColor(g$35get(), g$35get(), g$35get());
+        }
+        case 2:
+        {
+          let r$ = null;
+          let r$35isSet = false;
+          function r$35get() {
+            return r$35isSet ? r$ : dart.throw(new _internal.LateError.localNI("r"));
+          }
+          dart.fn(r$35get, T.VoidToint());
+          function r$35set(t8) {
+            if (t8 == null) dart.nullFailed(I[0], 693, 18, "null");
+            r$35isSet = true;
+            return r$ = t8;
+          }
+          dart.fn(r$35set, T.intTodynamic());
+          let g$0 = null;
+          let g$35isSet$ = false;
+          function g$35get$() {
+            return g$35isSet$ ? g$0 : dart.throw(new _internal.LateError.localNI("g"));
+          }
+          dart.fn(g$35get$, T.VoidToint());
+          function g$35set$(t13) {
+            if (t13 == null) dart.nullFailed(I[0], 693, 21, "null");
+            g$35isSet$ = true;
+            return g$0 = t13;
+          }
+          dart.fn(g$35set$, T.intTodynamic());
+          let b$ = null;
+          let b$35isSet = false;
+          function b$35get() {
+            return b$35isSet ? b$ : dart.throw(new _internal.LateError.localNI("b"));
+          }
+          dart.fn(b$35get, T.VoidToint());
+          function b$35set(t18) {
+            if (t18 == null) dart.nullFailed(I[0], 693, 24, "null");
+            b$35isSet = true;
+            return b$ = t18;
+          }
+          dart.fn(b$35set, T.intTodynamic());
+          switch (dart.nullCheck(this[_info]).bits) {
+            case 1:
+            {
+              r$35set(this[_convert1to8](raw[$_get](0)));
+              g$35set$(this[_convert1to8](raw[$_get](1)));
+              b$35set(this[_convert1to8](raw[$_get](2)));
+              break;
+            }
+            case 2:
+            {
+              r$35set(this[_convert2to8](raw[$_get](0)));
+              g$35set$(this[_convert2to8](raw[$_get](1)));
+              b$35set(this[_convert2to8](raw[$_get](2)));
+              break;
+            }
+            case 4:
+            {
+              r$35set(this[_convert4to8](raw[$_get](0)));
+              g$35set$(this[_convert4to8](raw[$_get](1)));
+              b$35set(this[_convert4to8](raw[$_get](2)));
+              break;
+            }
+            case 8:
+            {
+              r$35set(raw[$_get](0));
+              g$35set$(raw[$_get](1));
+              b$35set(raw[$_get](2));
+              break;
+            }
+            case 16:
+            {
+              r$35set(this[_convert16to8](raw[$_get](0)));
+              g$35set$(this[_convert16to8](raw[$_get](1)));
+              b$35set(this[_convert16to8](raw[$_get](2)));
+              break;
+            }
+          }
+          r$35set(dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).colorLut)[$_get](r$35get())));
+          g$35set$(dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).colorLut)[$_get](g$35get$())));
+          b$35set(dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).colorLut)[$_get](b$35get())));
+          if (dart.nullCheck(this[_info]).transparency != null) {
+            let tr = (dart.notNull(dart.nullCheck(dart.nullCheck(this[_info]).transparency)[$_get](0)) & 255) << 8 | dart.notNull(dart.nullCheck(dart.nullCheck(this[_info]).transparency)[$_get](1)) & 255;
+            let tg = (dart.notNull(dart.nullCheck(dart.nullCheck(this[_info]).transparency)[$_get](2)) & 255) << 8 | dart.notNull(dart.nullCheck(dart.nullCheck(this[_info]).transparency)[$_get](3)) & 255;
+            let tb = (dart.notNull(dart.nullCheck(dart.nullCheck(this[_info]).transparency)[$_get](4)) & 255) << 8 | dart.notNull(dart.nullCheck(dart.nullCheck(this[_info]).transparency)[$_get](5)) & 255;
+            if (raw[$_get](0) === tr && raw[$_get](1) === tg && raw[$_get](2) === tb) {
+              return color.getColor(r$35get(), g$35get$(), b$35get(), 0);
+            }
+          }
+          return color.getColor(r$35get(), g$35get$(), b$35get());
+        }
+        case 3:
+        {
+          let p = dart.notNull(raw[$_get](0)) * 3;
+          let a = dart.nullCheck(this[_info]).transparency != null && dart.notNull(raw[$_get](0)) < dart.notNull(dart.nullCheck(dart.nullCheck(this[_info]).transparency)[$length]) ? dart.nullCheck(dart.nullCheck(this[_info]).transparency)[$_get](raw[$_get](0)) : 255;
+          if (p >= dart.notNull(dart.nullCheck(dart.nullCheck(this[_info]).palette)[$length])) {
+            return color.getColor(255, 255, 255, a);
+          }
+          let r = dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).palette)[$_get](p));
+          let g = dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).palette)[$_get](p + 1));
+          let b = dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).palette)[$_get](p + 2));
+          return color.getColor(r, g, b, a);
+        }
+        case 4:
+        {
+          let g$1 = null;
+          let g$35isSet$0 = false;
+          function g$35get$0() {
+            return g$35isSet$0 ? g$1 : dart.throw(new _internal.LateError.localNI("g"));
+          }
+          dart.fn(g$35get$0, T.VoidToint());
+          function g$35set$0(t23) {
+            if (t23 == null) dart.nullFailed(I[0], 757, 18, "null");
+            g$35isSet$0 = true;
+            return g$1 = t23;
+          }
+          dart.fn(g$35set$0, T.intTodynamic());
+          let a$ = null;
+          let a$35isSet = false;
+          function a$35get() {
+            return a$35isSet ? a$ : dart.throw(new _internal.LateError.localNI("a"));
+          }
+          dart.fn(a$35get, T.VoidToint());
+          function a$35set(t28) {
+            if (t28 == null) dart.nullFailed(I[0], 757, 21, "null");
+            a$35isSet = true;
+            return a$ = t28;
+          }
+          dart.fn(a$35set, T.intTodynamic());
+          switch (dart.nullCheck(this[_info]).bits) {
+            case 1:
+            {
+              g$35set$0(this[_convert1to8](raw[$_get](0)));
+              a$35set(this[_convert1to8](raw[$_get](1)));
+              break;
+            }
+            case 2:
+            {
+              g$35set$0(this[_convert2to8](raw[$_get](0)));
+              a$35set(this[_convert2to8](raw[$_get](1)));
+              break;
+            }
+            case 4:
+            {
+              g$35set$0(this[_convert4to8](raw[$_get](0)));
+              a$35set(this[_convert4to8](raw[$_get](1)));
+              break;
+            }
+            case 8:
+            {
+              g$35set$0(raw[$_get](0));
+              a$35set(raw[$_get](1));
+              break;
+            }
+            case 16:
+            {
+              g$35set$0(this[_convert16to8](raw[$_get](0)));
+              a$35set(this[_convert16to8](raw[$_get](1)));
+              break;
+            }
+          }
+          g$35set$0(dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).colorLut)[$_get](g$35get$0())));
+          return color.getColor(g$35get$0(), g$35get$0(), g$35get$0(), a$35get());
+        }
+        case 6:
+        {
+          let r$0 = null;
+          let r$35isSet$ = false;
+          function r$35get$() {
+            return r$35isSet$ ? r$0 : dart.throw(new _internal.LateError.localNI("r"));
+          }
+          dart.fn(r$35get$, T.VoidToint());
+          function r$35set$(t33) {
+            if (t33 == null) dart.nullFailed(I[0], 785, 18, "null");
+            r$35isSet$ = true;
+            return r$0 = t33;
+          }
+          dart.fn(r$35set$, T.intTodynamic());
+          let g$2 = null;
+          let g$35isSet$1 = false;
+          function g$35get$1() {
+            return g$35isSet$1 ? g$2 : dart.throw(new _internal.LateError.localNI("g"));
+          }
+          dart.fn(g$35get$1, T.VoidToint());
+          function g$35set$1(t38) {
+            if (t38 == null) dart.nullFailed(I[0], 785, 21, "null");
+            g$35isSet$1 = true;
+            return g$2 = t38;
+          }
+          dart.fn(g$35set$1, T.intTodynamic());
+          let b$0 = null;
+          let b$35isSet$ = false;
+          function b$35get$() {
+            return b$35isSet$ ? b$0 : dart.throw(new _internal.LateError.localNI("b"));
+          }
+          dart.fn(b$35get$, T.VoidToint());
+          function b$35set$(t43) {
+            if (t43 == null) dart.nullFailed(I[0], 785, 24, "null");
+            b$35isSet$ = true;
+            return b$0 = t43;
+          }
+          dart.fn(b$35set$, T.intTodynamic());
+          let a$0 = null;
+          let a$35isSet$ = false;
+          function a$35get$() {
+            return a$35isSet$ ? a$0 : dart.throw(new _internal.LateError.localNI("a"));
+          }
+          dart.fn(a$35get$, T.VoidToint());
+          function a$35set$(t48) {
+            if (t48 == null) dart.nullFailed(I[0], 785, 27, "null");
+            a$35isSet$ = true;
+            return a$0 = t48;
+          }
+          dart.fn(a$35set$, T.intTodynamic());
+          switch (dart.nullCheck(this[_info]).bits) {
+            case 1:
+            {
+              r$35set$(this[_convert1to8](raw[$_get](0)));
+              g$35set$1(this[_convert1to8](raw[$_get](1)));
+              b$35set$(this[_convert1to8](raw[$_get](2)));
+              a$35set$(this[_convert1to8](raw[$_get](3)));
+              break;
+            }
+            case 2:
+            {
+              r$35set$(this[_convert2to8](raw[$_get](0)));
+              g$35set$1(this[_convert2to8](raw[$_get](1)));
+              b$35set$(this[_convert2to8](raw[$_get](2)));
+              a$35set$(this[_convert2to8](raw[$_get](3)));
+              break;
+            }
+            case 4:
+            {
+              r$35set$(this[_convert4to8](raw[$_get](0)));
+              g$35set$1(this[_convert4to8](raw[$_get](1)));
+              b$35set$(this[_convert4to8](raw[$_get](2)));
+              a$35set$(this[_convert4to8](raw[$_get](3)));
+              break;
+            }
+            case 8:
+            {
+              r$35set$(raw[$_get](0));
+              g$35set$1(raw[$_get](1));
+              b$35set$(raw[$_get](2));
+              a$35set$(raw[$_get](3));
+              break;
+            }
+            case 16:
+            {
+              r$35set$(this[_convert16to8](raw[$_get](0)));
+              g$35set$1(this[_convert16to8](raw[$_get](1)));
+              b$35set$(this[_convert16to8](raw[$_get](2)));
+              a$35set$(this[_convert16to8](raw[$_get](3)));
+              break;
+            }
+          }
+          r$35set$(dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).colorLut)[$_get](r$35get$())));
+          g$35set$1(dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).colorLut)[$_get](g$35get$1())));
+          b$35set$(dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_info]).colorLut)[$_get](b$35get$())));
+          return color.getColor(r$35get$(), g$35get$1(), b$35get$(), a$35get$());
+        }
+      }
+      dart.throw(new image_exception.ImageException.new("Invalid color type: " + dart.str(dart.nullCheck(this[_info]).colorType) + "."));
+    }
+    get [_input]() {
+      let t50;
+      return dart.test(this[__PngDecoder__input_isSet]) ? (t50 = this[__PngDecoder__input], t50) : dart.throw(new _internal.LateError.fieldNI("_input"));
+    }
+    set [_input](t50) {
+      if (t50 == null) dart.nullFailed(I[0], 829, 20, "null");
+      this[__PngDecoder__input_isSet] = true;
+      this[__PngDecoder__input] = t50;
+    }
+  };
+  (png_decoder.PngDecoder.new = function() {
+    this[_info] = null;
+    this[_bitBuffer] = 0;
+    this[_bitBufferLen] = 0;
+    this[__PngDecoder__input] = null;
+    this[__PngDecoder__input_isSet] = false;
+    this[_progressY] = 0;
+    ;
+  }).prototype = png_decoder.PngDecoder.prototype;
+  dart.addTypeTests(png_decoder.PngDecoder);
+  dart.addTypeCaches(png_decoder.PngDecoder);
+  dart.setMethodSignature(png_decoder.PngDecoder, () => ({
+    __proto__: dart.getMethods(png_decoder.PngDecoder.__proto__),
+    isValidFile: dart.fnType(core.bool, [core.List$(core.int)]),
+    startDecode: dart.fnType(dart.nullable(decode_info.DecodeInfo), [core.List$(core.int)]),
+    numFrames: dart.fnType(core.int, []),
+    decodeFrame: dart.fnType(dart.nullable(image$.Image), [core.int]),
+    decodeImage: dart.fnType(dart.nullable(image$.Image), [core.List$(core.int)], {frame: core.int}, {}),
+    decodeAnimation: dart.fnType(dart.nullable(animation.Animation), [core.List$(core.int)]),
+    [_processPass]: dart.fnType(dart.void, [input_buffer.InputBuffer, image$.Image, core.int, core.int, core.int, core.int, core.int, core.int]),
+    [_process]: dart.fnType(dart.void, [input_buffer.InputBuffer, image$.Image]),
+    [_unfilter]: dart.fnType(dart.void, [core.int, core.int, core.List$(core.int), core.List$(core.int)]),
+    [_convert16to8]: dart.fnType(core.int, [core.int]),
+    [_convert1to8]: dart.fnType(core.int, [core.int]),
+    [_convert2to8]: dart.fnType(core.int, [core.int]),
+    [_convert4to8]: dart.fnType(core.int, [core.int]),
+    [_crc]: dart.fnType(core.int, [core.String, core.List$(core.int)]),
+    [_resetBits]: dart.fnType(dart.void, []),
+    [_readBits]: dart.fnType(core.int, [input_buffer.InputBuffer, core.int]),
+    [_readPixel]: dart.fnType(dart.void, [input_buffer.InputBuffer, core.List$(core.int)]),
+    [_getColor]: dart.fnType(core.int, [core.List$(core.int)])
+  }));
+  dart.setGetterSignature(png_decoder.PngDecoder, () => ({
+    __proto__: dart.getGetters(png_decoder.PngDecoder.__proto__),
+    info: dart.nullable(png_info.PngInfo),
+    [_input]: input_buffer.InputBuffer
+  }));
+  dart.setSetterSignature(png_decoder.PngDecoder, () => ({
+    __proto__: dart.getSetters(png_decoder.PngDecoder.__proto__),
+    [_input]: input_buffer.InputBuffer
+  }));
+  dart.setLibraryUri(png_decoder.PngDecoder, I[1]);
+  dart.setFieldSignature(png_decoder.PngDecoder, () => ({
+    __proto__: dart.getFields(png_decoder.PngDecoder.__proto__),
+    [_info]: dart.fieldType(dart.nullable(png_info.InternalPngInfo)),
+    [_bitBuffer]: dart.fieldType(core.int),
+    [_bitBufferLen]: dart.fieldType(core.int),
+    [__PngDecoder__input]: dart.fieldType(dart.nullable(input_buffer.InputBuffer)),
+    [__PngDecoder__input_isSet]: dart.fieldType(core.bool),
+    [_progressY]: dart.fieldType(core.int)
+  }));
+  dart.defineLazy(png_decoder.PngDecoder, {
+    /*png_decoder.PngDecoder.GRAYSCALE*/get GRAYSCALE() {
+      return 0;
+    },
+    /*png_decoder.PngDecoder.RGB*/get RGB() {
+      return 2;
+    },
+    /*png_decoder.PngDecoder.INDEXED*/get INDEXED() {
+      return 3;
+    },
+    /*png_decoder.PngDecoder.GRAYSCALE_ALPHA*/get GRAYSCALE_ALPHA() {
+      return 4;
+    },
+    /*png_decoder.PngDecoder.RGBA*/get RGBA() {
+      return 6;
+    },
+    /*png_decoder.PngDecoder.FILTER_NONE*/get FILTER_NONE() {
+      return 0;
+    },
+    /*png_decoder.PngDecoder.FILTER_SUB*/get FILTER_SUB() {
+      return 1;
+    },
+    /*png_decoder.PngDecoder.FILTER_UP*/get FILTER_UP() {
+      return 2;
+    },
+    /*png_decoder.PngDecoder.FILTER_AVERAGE*/get FILTER_AVERAGE() {
+      return 3;
+    },
+    /*png_decoder.PngDecoder.FILTER_PAETH*/get FILTER_PAETH() {
+      return 4;
+    }
+  }, false);
+  dart.trackLibraries("packages/image/src/formats/png_decoder.dart", {
+    "package:image/src/formats/png_decoder.dart": png_decoder
+  }, {
+  }, '{"version":3,"sourceRoot":"","sources":["png_decoder.dart"],"names":[],"mappings":"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","file":"../../../../../../../../../../../D:/packages/image/src/formats/png_decoder.dart.lib.js"}');
+  // Exports:
+  return {
+    src__formats__png_decoder: png_decoder
+  };
+}));
+
+//# sourceMappingURL=png_decoder.dart.lib.js.map

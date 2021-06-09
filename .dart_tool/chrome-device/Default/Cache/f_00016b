@@ -1,0 +1,280 @@
+define(['dart_sdk', 'packages/image/src/util/input_buffer.dart'], (function load__packages__image__src__formats__webp__webp_filters_dart(dart_sdk, packages__image__src__util__input_buffer$46dart) {
+  'use strict';
+  const core = dart_sdk.core;
+  const typed_data = dart_sdk.typed_data;
+  const dart = dart_sdk.dart;
+  const dartx = dart_sdk.dartx;
+  const input_buffer = packages__image__src__util__input_buffer$46dart.src__util__input_buffer;
+  var webp_filters = Object.create(dart.library);
+  dart._checkModuleNullSafetyMode(false);
+  var T = {
+    Uint8ListAndintAndint__Tovoid: () => (T.Uint8ListAndintAndint__Tovoid = dart.constFn(dart.fnType(dart.void, [typed_data.Uint8List, core.int, core.int, core.int, typed_data.Uint8List])))(),
+    Uint8ListL: () => (T.Uint8ListL = dart.constFn(dart.legacy(typed_data.Uint8List)))(),
+    intL: () => (T.intL = dart.constFn(dart.legacy(core.int)))(),
+    Uint8ListLAndintLAndintL__Tovoid: () => (T.Uint8ListLAndintLAndintL__Tovoid = dart.constFn(dart.fnType(dart.void, [T.Uint8ListL(), T.intL(), T.intL(), T.intL(), T.Uint8ListL()])))(),
+    Uint8ListLAndintLAndintL__ToNvoid: () => (T.Uint8ListLAndintLAndintL__ToNvoid = dart.constFn(dart.nullable(T.Uint8ListLAndintLAndintL__Tovoid())))(),
+    intAndintAndint__Tovoid: () => (T.intAndintAndint__Tovoid = dart.constFn(dart.fnType(dart.void, [core.int, core.int, core.int, core.int, core.int, typed_data.Uint8List])))(),
+    intLAndintLAndintL__Tovoid: () => (T.intLAndintLAndintL__Tovoid = dart.constFn(dart.fnType(dart.void, [T.intL(), T.intL(), T.intL(), T.intL(), T.intL(), T.Uint8ListL()])))(),
+    intLAndintLAndintL__ToNvoid: () => (T.intLAndintLAndintL__ToNvoid = dart.constFn(dart.nullable(T.intLAndintLAndintL__Tovoid())))()
+  };
+  var T$Eval = Object.assign({
+    _: () => T$Eval
+  }, T);
+  var S = {
+    _: () => S
+  };
+  var S$Eval = Object.assign({
+    _: () => S$Eval
+  }, S);
+  const CT = Object.create({
+    _: () => (C, CT)
+  });
+  dart.defineLazy(CT, {
+    get C1() {
+      return C[1] = dart.fn(webp_filters.WebPFilters.horizontalFilter, T.Uint8ListAndintAndint__Tovoid());
+    },
+    get C2() {
+      return C[2] = dart.fn(webp_filters.WebPFilters.verticalFilter, T.Uint8ListAndintAndint__Tovoid());
+    },
+    get C3() {
+      return C[3] = dart.fn(webp_filters.WebPFilters.gradientFilter, T.Uint8ListAndintAndint__Tovoid());
+    },
+    get C0() {
+      return C[0] = dart.constList([null, C[1] || CT.C1, C[2] || CT.C2, C[3] || CT.C3], T.Uint8ListLAndintLAndintL__ToNvoid());
+    },
+    get C5() {
+      return C[5] = dart.fn(webp_filters.WebPFilters.horizontalUnfilter, T.intAndintAndint__Tovoid());
+    },
+    get C6() {
+      return C[6] = dart.fn(webp_filters.WebPFilters.verticalUnfilter, T.intAndintAndint__Tovoid());
+    },
+    get C7() {
+      return C[7] = dart.fn(webp_filters.WebPFilters.gradientUnfilter, T.intAndintAndint__Tovoid());
+    },
+    get C4() {
+      return C[4] = dart.constList([null, C[5] || CT.C5, C[6] || CT.C6, C[7] || CT.C7], T.intLAndintLAndintL__ToNvoid());
+    }
+  }, false);
+  var C = Array(8).fill(void 0);
+  var I = [
+    "file:///C:/Users/shara/Flutter/.pub-cache/hosted/pub.dartlang.org/image-3.0.2/lib/src/formats/webp/webp_filters.dart",
+    "package:image/src/formats/webp/webp_filters.dart"
+  ];
+  webp_filters.WebPFilters = class WebPFilters extends core.Object {
+    static horizontalFilter(data, width, height, stride, filteredData) {
+      if (data == null) dart.nullFailed(I[0], 29, 42, "data");
+      if (width == null) dart.nullFailed(I[0], 29, 52, "width");
+      if (height == null) dart.nullFailed(I[0], 29, 63, "height");
+      if (stride == null) dart.nullFailed(I[0], 30, 11, "stride");
+      if (filteredData == null) dart.nullFailed(I[0], 30, 29, "filteredData");
+      webp_filters.WebPFilters._doHorizontalFilter(data, width, height, stride, 0, height, false, filteredData);
+    }
+    static horizontalUnfilter(width, height, stride, row, numRows, data) {
+      if (width == null) dart.nullFailed(I[0], 36, 11, "width");
+      if (height == null) dart.nullFailed(I[0], 36, 22, "height");
+      if (stride == null) dart.nullFailed(I[0], 36, 34, "stride");
+      if (row == null) dart.nullFailed(I[0], 36, 46, "row");
+      if (numRows == null) dart.nullFailed(I[0], 36, 55, "numRows");
+      if (data == null) dart.nullFailed(I[0], 36, 74, "data");
+      webp_filters.WebPFilters._doHorizontalFilter(data, width, height, stride, row, numRows, true, data);
+    }
+    static verticalFilter(data, width, height, stride, filteredData) {
+      if (data == null) dart.nullFailed(I[0], 40, 40, "data");
+      if (width == null) dart.nullFailed(I[0], 40, 50, "width");
+      if (height == null) dart.nullFailed(I[0], 40, 61, "height");
+      if (stride == null) dart.nullFailed(I[0], 40, 73, "stride");
+      if (filteredData == null) dart.nullFailed(I[0], 41, 17, "filteredData");
+      webp_filters.WebPFilters._doVerticalFilter(data, width, height, stride, 0, height, false, filteredData);
+    }
+    static verticalUnfilter(width, height, stride, row, num_rows, data) {
+      if (width == null) dart.nullFailed(I[0], 46, 36, "width");
+      if (height == null) dart.nullFailed(I[0], 46, 47, "height");
+      if (stride == null) dart.nullFailed(I[0], 46, 59, "stride");
+      if (row == null) dart.nullFailed(I[0], 46, 71, "row");
+      if (num_rows == null) dart.nullFailed(I[0], 47, 11, "num_rows");
+      if (data == null) dart.nullFailed(I[0], 47, 31, "data");
+      webp_filters.WebPFilters._doVerticalFilter(data, width, height, stride, row, num_rows, true, data);
+    }
+    static gradientFilter(data, width, height, stride, filteredData) {
+      if (data == null) dart.nullFailed(I[0], 51, 40, "data");
+      if (width == null) dart.nullFailed(I[0], 51, 50, "width");
+      if (height == null) dart.nullFailed(I[0], 51, 61, "height");
+      if (stride == null) dart.nullFailed(I[0], 51, 73, "stride");
+      if (filteredData == null) dart.nullFailed(I[0], 52, 17, "filteredData");
+      webp_filters.WebPFilters._doGradientFilter(data, width, height, stride, 0, height, false, filteredData);
+    }
+    static gradientUnfilter(width, height, stride, row, num_rows, data) {
+      if (width == null) dart.nullFailed(I[0], 57, 36, "width");
+      if (height == null) dart.nullFailed(I[0], 57, 47, "height");
+      if (stride == null) dart.nullFailed(I[0], 57, 59, "stride");
+      if (row == null) dart.nullFailed(I[0], 57, 71, "row");
+      if (num_rows == null) dart.nullFailed(I[0], 58, 11, "num_rows");
+      if (data == null) dart.nullFailed(I[0], 58, 31, "data");
+      webp_filters.WebPFilters._doGradientFilter(data, width, height, stride, row, num_rows, true, data);
+    }
+    static _predictLine(src, pred, dst, length, inverse) {
+      if (src == null) dart.nullFailed(I[0], 62, 40, "src");
+      if (pred == null) dart.nullFailed(I[0], 62, 57, "pred");
+      if (dst == null) dart.nullFailed(I[0], 62, 75, "dst");
+      if (length == null) dart.nullFailed(I[0], 63, 11, "length");
+      if (inverse == null) dart.nullFailed(I[0], 63, 24, "inverse");
+      if (dart.test(inverse)) {
+        for (let i = 0; i < dart.notNull(length); i = i + 1) {
+          dst._set(i, dart.notNull(src._get(i)) + dart.notNull(pred._get(i)));
+        }
+      } else {
+        for (let i = 0; i < dart.notNull(length); i = i + 1) {
+          dst._set(i, dart.notNull(src._get(i)) - dart.notNull(pred._get(i)));
+        }
+      }
+    }
+    static _doHorizontalFilter(src, width, height, stride, row, numRows, inverse, out) {
+      if (src == null) dart.nullFailed(I[0], 75, 45, "src");
+      if (width == null) dart.nullFailed(I[0], 75, 54, "width");
+      if (height == null) dart.nullFailed(I[0], 75, 65, "height");
+      if (stride == null) dart.nullFailed(I[0], 76, 11, "stride");
+      if (row == null) dart.nullFailed(I[0], 76, 23, "row");
+      if (numRows == null) dart.nullFailed(I[0], 76, 32, "numRows");
+      if (inverse == null) dart.nullFailed(I[0], 76, 46, "inverse");
+      if (out == null) dart.nullFailed(I[0], 76, 65, "out");
+      let startOffset = dart.notNull(row) * dart.notNull(stride);
+      let lastRow = dart.notNull(row) + dart.notNull(numRows);
+      let s = new input_buffer.InputBuffer.new(src, {offset: startOffset});
+      let o = new input_buffer.InputBuffer.new(src, {offset: startOffset});
+      let preds = new input_buffer.InputBuffer.from(dart.test(inverse) ? o : s);
+      if (row === 0) {
+        o._set(0, s._get(0));
+        webp_filters.WebPFilters._predictLine(new input_buffer.InputBuffer.from(s, {offset: 1}), preds, new input_buffer.InputBuffer.from(o, {offset: 1}), dart.notNull(width) - 1, inverse);
+        row = 1;
+        preds.offset = dart.notNull(preds.offset) + dart.notNull(stride);
+        s.offset = dart.notNull(s.offset) + dart.notNull(stride);
+        o.offset = dart.notNull(o.offset) + dart.notNull(stride);
+      }
+      while (dart.notNull(row) < lastRow) {
+        webp_filters.WebPFilters._predictLine(s, new input_buffer.InputBuffer.from(preds, {offset: -dart.notNull(stride)}), o, 1, inverse);
+        webp_filters.WebPFilters._predictLine(new input_buffer.InputBuffer.from(s, {offset: 1}), preds, new input_buffer.InputBuffer.from(o, {offset: 1}), dart.notNull(width) - 1, inverse);
+        row = dart.notNull(row) + 1;
+        preds.offset = dart.notNull(preds.offset) + dart.notNull(stride);
+        s.offset = dart.notNull(s.offset) + dart.notNull(stride);
+        o.offset = dart.notNull(o.offset) + dart.notNull(stride);
+      }
+    }
+    static _doVerticalFilter(src, width, height, stride, row, numRows, inverse, out) {
+      if (src == null) dart.nullFailed(I[0], 107, 43, "src");
+      if (width == null) dart.nullFailed(I[0], 107, 52, "width");
+      if (height == null) dart.nullFailed(I[0], 107, 63, "height");
+      if (stride == null) dart.nullFailed(I[0], 108, 11, "stride");
+      if (row == null) dart.nullFailed(I[0], 108, 23, "row");
+      if (numRows == null) dart.nullFailed(I[0], 108, 32, "numRows");
+      if (inverse == null) dart.nullFailed(I[0], 108, 46, "inverse");
+      if (out == null) dart.nullFailed(I[0], 108, 65, "out");
+      let startOffset = dart.notNull(row) * dart.notNull(stride);
+      let last_row = dart.notNull(row) + dart.notNull(numRows);
+      let s = new input_buffer.InputBuffer.new(src, {offset: startOffset});
+      let o = new input_buffer.InputBuffer.new(out, {offset: startOffset});
+      let preds = new input_buffer.InputBuffer.from(dart.test(inverse) ? o : s);
+      if (row === 0) {
+        o._set(0, s._get(0));
+        webp_filters.WebPFilters._predictLine(new input_buffer.InputBuffer.from(s, {offset: 1}), preds, new input_buffer.InputBuffer.from(o, {offset: 1}), dart.notNull(width) - 1, inverse);
+        row = 1;
+        s.offset = dart.notNull(s.offset) + dart.notNull(stride);
+        o.offset = dart.notNull(o.offset) + dart.notNull(stride);
+      } else {
+        preds.offset = dart.notNull(preds.offset) - dart.notNull(stride);
+      }
+      while (dart.notNull(row) < last_row) {
+        webp_filters.WebPFilters._predictLine(s, preds, o, width, inverse);
+        row = dart.notNull(row) + 1;
+        preds.offset = dart.notNull(preds.offset) + dart.notNull(stride);
+        s.offset = dart.notNull(s.offset) + dart.notNull(stride);
+        o.offset = dart.notNull(o.offset) + dart.notNull(stride);
+      }
+    }
+    static _gradientPredictor(a, b, c) {
+      if (a == null) dart.nullFailed(I[0], 139, 37, "a");
+      if (b == null) dart.nullFailed(I[0], 139, 44, "b");
+      if (c == null) dart.nullFailed(I[0], 139, 51, "c");
+      let g = dart.notNull(a) + dart.notNull(b) - dart.notNull(c);
+      return (g & ~255 >>> 0) === 0 ? g : g < 0 ? 0 : 255;
+    }
+    static _doGradientFilter(src, width, height, stride, row, numRows, inverse, out) {
+      if (src == null) dart.nullFailed(I[0], 148, 43, "src");
+      if (width == null) dart.nullFailed(I[0], 148, 52, "width");
+      if (height == null) dart.nullFailed(I[0], 148, 63, "height");
+      if (stride == null) dart.nullFailed(I[0], 149, 11, "stride");
+      if (row == null) dart.nullFailed(I[0], 149, 23, "row");
+      if (numRows == null) dart.nullFailed(I[0], 149, 32, "numRows");
+      if (inverse == null) dart.nullFailed(I[0], 149, 46, "inverse");
+      if (out == null) dart.nullFailed(I[0], 149, 65, "out");
+      let startOffset = dart.notNull(row) * dart.notNull(stride);
+      let lastRow = dart.notNull(row) + dart.notNull(numRows);
+      let s = new input_buffer.InputBuffer.new(src, {offset: startOffset});
+      let o = new input_buffer.InputBuffer.new(out, {offset: startOffset});
+      let preds = new input_buffer.InputBuffer.from(dart.test(inverse) ? o : s);
+      if (row === 0) {
+        o._set(0, s._get(0));
+        webp_filters.WebPFilters._predictLine(new input_buffer.InputBuffer.from(s, {offset: 1}), preds, new input_buffer.InputBuffer.from(o, {offset: 1}), dart.notNull(width) - 1, inverse);
+        row = 1;
+        preds.offset = dart.notNull(preds.offset) + dart.notNull(stride);
+        s.offset = dart.notNull(s.offset) + dart.notNull(stride);
+        o.offset = dart.notNull(o.offset) + dart.notNull(stride);
+      }
+      while (dart.notNull(row) < lastRow) {
+        webp_filters.WebPFilters._predictLine(s, new input_buffer.InputBuffer.from(preds, {offset: -dart.notNull(stride)}), o, 1, inverse);
+        for (let w = 1; w < dart.notNull(width); w = w + 1) {
+          let pred = webp_filters.WebPFilters._gradientPredictor(preds._get(w - 1), preds._get(w - dart.notNull(stride)), preds._get(w - dart.notNull(stride) - 1));
+          o._set(w, dart.notNull(s._get(w)) + dart.notNull(dart.test(inverse) ? pred : -dart.notNull(pred)));
+        }
+        row = dart.notNull(row) + 1;
+        preds.offset = dart.notNull(preds.offset) + dart.notNull(stride);
+        s.offset = dart.notNull(s.offset) + dart.notNull(stride);
+        o.offset = dart.notNull(o.offset) + dart.notNull(stride);
+      }
+    }
+  };
+  (webp_filters.WebPFilters.new = function() {
+    ;
+  }).prototype = webp_filters.WebPFilters.prototype;
+  dart.addTypeTests(webp_filters.WebPFilters);
+  dart.addTypeCaches(webp_filters.WebPFilters);
+  dart.setLibraryUri(webp_filters.WebPFilters, I[1]);
+  dart.defineLazy(webp_filters.WebPFilters, {
+    /*webp_filters.WebPFilters.FILTER_NONE*/get FILTER_NONE() {
+      return 0;
+    },
+    /*webp_filters.WebPFilters.FILTER_HORIZONTAL*/get FILTER_HORIZONTAL() {
+      return 1;
+    },
+    /*webp_filters.WebPFilters.FILTER_VERTICAL*/get FILTER_VERTICAL() {
+      return 2;
+    },
+    /*webp_filters.WebPFilters.FILTER_GRADIENT*/get FILTER_GRADIENT() {
+      return 3;
+    },
+    /*webp_filters.WebPFilters.FILTER_LAST*/get FILTER_LAST() {
+      return 4;
+    },
+    /*webp_filters.WebPFilters.FILTER_BEST*/get FILTER_BEST() {
+      return 5;
+    },
+    /*webp_filters.WebPFilters.FILTER_FAST*/get FILTER_FAST() {
+      return 6;
+    },
+    /*webp_filters.WebPFilters.FILTERS*/get FILTERS() {
+      return C[0] || CT.C0;
+    },
+    /*webp_filters.WebPFilters.UNFILTERS*/get UNFILTERS() {
+      return C[4] || CT.C4;
+    }
+  }, false);
+  dart.trackLibraries("packages/image/src/formats/webp/webp_filters.dart", {
+    "package:image/src/formats/webp/webp_filters.dart": webp_filters
+  }, {
+  }, '{"version":3,"sourceRoot":"","sources":["webp_filters.dart"],"names":[],"mappings":"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","file":"../../../../../../../../../../../../D:/packages/image/src/formats/webp/webp_filters.dart.lib.js"}');
+  // Exports:
+  return {
+    src__formats__webp__webp_filters: webp_filters
+  };
+}));
+
+//# sourceMappingURL=webp_filters.dart.lib.js.map

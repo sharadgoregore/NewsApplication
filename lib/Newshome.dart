@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:newsapp/Customlistile.dart';
 import 'package:newsapp/apiservices/Apiservices2.dart';
@@ -18,17 +20,26 @@ class NewsHome extends StatefulWidget {
 class _NewsHomeState extends State<NewsHome>
     with SingleTickerProviderStateMixin {
   final key = GlobalKey<FormState>();
+
   // Apiservices services = Apiservices
   // ();
   Future<Welcome> _welcome;
   Future<Welcome> _welcome2;
   Future<Welcome> _welcome3;
+  Future<Welcome> _welcome4;
+  Future<Welcome> _welcome5;
+  Future<Welcome> _welcome6;
+
   var refreshkey = GlobalKey<RefreshIndicatorState>();
   String queryNews;
+  Future todos;
   @override
   void initState() {
     _welcome = Apiservices().getnews();
     _welcome2 = Apiservices2().getnews();
+    _welcome4 = Apisports().getnews();
+    _welcome5 = Apientertainment().getnews();
+    _welcome6 = Apitech().getnews();
     super.initState();
   }
 
@@ -42,7 +53,7 @@ class _NewsHomeState extends State<NewsHome>
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
+        length: 5,
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.transparent,
@@ -98,27 +109,54 @@ class _NewsHomeState extends State<NewsHome>
                   ),
                 ),
               ),
-             
             ]),
-            bottom: TabBar(indicatorSize: TabBarIndicatorSize.label, tabs: [
-              Tab(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Todays News",
-                    style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+            bottom: TabBar(
+                isScrollable: true,
+                indicatorSize: TabBarIndicatorSize.label,
+                tabs: [
+                  Tab(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Todays News",
+                        style: TextStyle(
+                            fontSize: 19, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Tab(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text("Top Headlines",
-                      style:
-                          TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
-                ),
-              ),
-            ]),
+                  Tab(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text("Top Headlines",
+                          style: TextStyle(
+                              fontSize: 19, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  Tab(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text("Sports",
+                          style: TextStyle(
+                              fontSize: 19, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  Tab(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text("Entertainment",
+                          style: TextStyle(
+                              fontSize: 19, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  Tab(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text("Tech",
+                          style: TextStyle(
+                              fontSize: 19, fontWeight: FontWeight.bold)),
+                    ),
+                  )
+                ]),
           ),
           body: TabBarView(
             children: [
@@ -140,7 +178,7 @@ class _NewsHomeState extends State<NewsHome>
                   }),
               RefreshIndicator(
                 key: refreshkey,
-                onRefresh: refreshList,
+                onRefresh: fetchFruit,
                 child: FutureBuilder<Welcome>(
                     future: _welcome2,
                     builder: (context, snapshot) {
@@ -157,18 +195,85 @@ class _NewsHomeState extends State<NewsHome>
                         );
                     }),
               ),
+              FutureBuilder<Welcome>(
+                  future: _welcome4,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<Article> article = snapshot.data.articles;
+
+                      // print(article);
+                      return ListView.builder(
+                          itemCount: snapshot.data.articles.length,
+                          itemBuilder: (context, index) =>
+                              customListTile(article[index], context));
+                    } else
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                  }),
+              FutureBuilder<Welcome>(
+                  future: _welcome5,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<Article> article = snapshot.data.articles;
+
+                      // print(article);
+                      return ListView.builder(
+                          itemCount: snapshot.data.articles.length,
+                          itemBuilder: (context, index) =>
+                              customListTile(article[index], context));
+                    } else
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                  }),
+              FutureBuilder<Welcome>(
+                  future: _welcome6,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<Article> article = snapshot.data.articles;
+
+                      // print(article);
+                      return ListView.builder(
+                          itemCount: snapshot.data.articles.length,
+                          itemBuilder: (context, index) =>
+                              customListTile(article[index], context));
+                    } else
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                  }),
             ],
           ),
         ));
   }
 
-  Future<void> refreshList() async {
-    final response = await https.get(Uri.parse(
+
+  Future fetchFruit() async {
+  final response = await https.get(Uri.parse(
         "https://newsapi.org/v2/top-headlines?country=us&apiKey=5cd543951af649eb849069dd13ab3f7c"));
-    if (response.statusCode == 200) {
-      return (response.body);
-    } else {
-      throw Exception('Unable to fetch data from the REST API');
-    }
+  if (response.statusCode == 200) {
+    return decodeFruit(response.body);
+
+  } else {
+    throw Exception('Unable to fetch data from the REST API');
   }
 }
+
+Future<Welcome> decodeFruit(String responseBody) {
+  final parsed = json.decode(responseBody);
+  return parsed<Welcome>((json) => Welcome.fromJson(json));
+  
+}
+}
+
+//   Future<void> refreshList() async {
+//     final response = await https.get(Uri.parse(
+//         "https://newsapi.org/v2/top-headlines?country=us&apiKey=5cd543951af649eb849069dd13ab3f7c"));
+//     if (response.statusCode == 200) {
+//       return (response.body);
+//     } else {
+//       throw Exception('Unable to fetch data from the REST API');
+//     }
+//   }
+// }

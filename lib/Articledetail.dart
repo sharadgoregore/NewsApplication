@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:newsapp/models/newsdata.dart';
 
 class ArticlePage extends StatelessWidget {
@@ -10,7 +11,11 @@ class ArticlePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(article.title,softWrap: true,overflow: TextOverflow.ellipsis,),
+        title: Text(
+          article.title,
+          softWrap: true,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -22,12 +27,8 @@ class ArticlePage extends StatelessWidget {
               height: 200.0,
               width: double.infinity,
               decoration: BoxDecoration(
-                //let's add the height
-
                 image: DecorationImage(
-                    image: NetworkImage
-                    
-                    (article.urlToImage), fit: BoxFit.cover),
+                    image: NetworkImage(article.urlToImage), fit: BoxFit.cover),
                 borderRadius: BorderRadius.circular(12.0),
               ),
             ),

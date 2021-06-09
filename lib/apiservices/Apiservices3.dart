@@ -21,7 +21,7 @@ class Apiservices3 {
       // var jsonmap = json.decode(jsonstring);
       // print(jsonmap);
       //print(newsmodel);
-      print(response.statusCode);
+     // print(response.statusCode);
       Welcome newsmodel = welcomeFromJson(jsonstring);
        return newsmodel;
     }
